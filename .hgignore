@@ -1,0 +1,20 @@
+syntax: glob
+exe
+dll
+bin
+obj
+*.suo
+*.csproj.user
+*.csproj.webinfo
+*.projdata
+*.pdb
+*.positions
+*proj.user
+*proj.*.user
+*.ncb
+*.pch
+*.idb
+*.clw
+*.aps
+*.cache
+*.psess
