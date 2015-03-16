@@ -22,20 +22,31 @@ namespace Bulk_Image_Watermark
     {
         public MainWindow()
         {
+            SetLanguage();
             InitializeComponent();
         }
 
         private void SetLanguage()
         {
-            //http://www.codeproject.com/Articles/123460/Simplest-Way-to-Implement-Multilingual-WPF-Applica
-            //System.Threading.Thread.CurrentThread.CurrentCulture.LCID
-            //0x0419 russian
-            //0x0422 ukrainian
-            //0x0423 belarusian
+            //check current culture and add localisation if needed
 
             ResourceDictionary dict = new ResourceDictionary();
-            dict.Source = new Uri("..\\Resources\\LocalisationStringsEN.xaml", UriKind.Relative);
-            this.Resources.MergedDictionaries.Add(dict);
+
+            switch (System.Threading.Thread.CurrentThread.CurrentCulture.LCID)
+            {
+                //russian
+                case 0x0419://RU
+                case 0x0422://UA
+                case 0x0423://BE
+                    dict.Source = new Uri("..\\Culture\\LocalisationStringsRU.xaml", UriKind.Relative);
+                    break;
+                //case XXX:
+                //    break;
+            }
+            if (dict.Source != null)
+            {
+                this.Resources.MergedDictionaries.Add(dict);
+            }
         }
     }
 }

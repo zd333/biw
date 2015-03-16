@@ -1,19 +1,61 @@
 ﻿<Window x:Class="Bulk_Image_Watermark.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{StaticResource MainWindowTitle}" Height="350" Width="525">
-
+        Title="{DynamicResource MainWindowTitle}" Height="600" Width="800">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="BorderBrush" Value="Green"/>
+        </Style>
+    </Window.Resources>
+    
     <DockPanel LastChildFill="True">
-        <TabControl DockPanel.Dock="Top" Height="100" VerticalAlignment="Top">
-            <TabItem Header="ttt">
+        <TabControl DockPanel.Dock="Top" VerticalAlignment="Top" Height="150">
+            <TabItem Header="{DynamicResource TabPathsName}">
+                <StackPanel Orientation="Vertical">
+                    <DockPanel LastChildFill="True">
+                        <Label Content="{DynamicResource LabelSourcepath}" DockPanel.Dock="Left"/>
+                        <Button Name="buttonSelectSourcePath" Content="..." DockPanel.Dock="Right" Width="40"/>
+                        <TextBox Name="textBoxSourcePath"/>
+                    </DockPanel>
+                    <CheckBox Name="checkBoxUseSubdirectories"  Content="{DynamicResource CheckboxUseSubdirectories}"/>
+                    <CheckBox Name="checkBoxOverwriteSourceFiles"  Content="{DynamicResource CheckboxOverwriteSourceFiles}" Foreground="Red"/>
+                    <DockPanel LastChildFill="True" IsEnabled="{Binding ElementName=checkBoxOverwriteSourceFiles, Path=IsChecked}">
+                        <Label Content="{DynamicResource LabelDestinationpath}" DockPanel.Dock="Left"/>
+                        <Button Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40"/>
+                        <TextBox Name="textBoxDestinationPath"/>
+                    </DockPanel>
+                </StackPanel>
             </TabItem>
-            <TabItem Header="Add Watermarks">
+            <TabItem Header="{DynamicResource TabAddWatermarksName}">
             </TabItem>
-            <TabItem Header="Watermark properties">
+            <TabItem Header="{DynamicResource TabWatermarkProperties}">
             </TabItem>
-            <TabItem Header="Save settings">
+            <TabItem Header="{DynamicResource TabSaveSettings}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Name="checkBoxResizeResults"  Content="{DynamicResource CheckboxResizeResults}" />
+                        <ComboBox Name="comboBoxResultResolution" IsEnabled="{Binding ElementName=checkBoxResizeResults, Path=IsChecked}">
+                            <ComboBoxItem Name="comboBoxItem320" Content="320*240"/>
+                            <ComboBoxItem Name="comboBoxItem640" Content="640*480"/>
+                            <ComboBoxItem Name="comboBoxItem1024" Content="1024*768" IsSelected="True"/>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel  Orientation="Horizontal">
+                        <CheckBox Name="checkBoxChangeResultsFormat"  Content="{DynamicResource CheckboxChangeResultFormat}"/>
+                        <ComboBox Name="comboBoxResultsFormat" IsEnabled="{Binding ElementName=checkBoxChangeResultsFormat, Path=IsChecked}">
+                            <ComboBoxItem Name="comboBoxItemJPG" Content="jpg" IsSelected="True"/>
+                            <ComboBoxItem Name="comboBoxItemPNG" Content="png"/>
+                            <ComboBoxItem Name="comboBoxItemBMP" Content="bmp"/>
+                        </ComboBox>
+                    </StackPanel>
+                    <DockPanel LastChildFill="True">
+                        <Button Name="buttonSave" Content="{DynamicResource ButtonSave}" DockPanel.Dock="Left"/>
+                        <Label Name="labelSaveMessage" Foreground="Red" Content="Test save message. Dont forget to remove."/>
+                    </DockPanel>
+                </StackPanel>
             </TabItem>
         </TabControl>
-        <Canvas/>
+        <ListBox Name="listBoxPreview" Width="100"/>
+        <Canvas Background="Beige"/>
     </DockPanel>
 </Window>

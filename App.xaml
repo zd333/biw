@@ -1,12 +1,23 @@
 ﻿<Application x:Class="Bulk_Image_Watermark.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Culture\\LocalisationStrings.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            <system:String x:Key="MainWindowTitle">Bulk Image Watermark</system:String>
+            <system:String x:Key="TabPathsName">Paths</system:String>
+            <system:String x:Key="TabAddWatermarksName">Add watermarks</system:String>
+            <system:String x:Key="TabWatermarkProperties">Watermark properties</system:String>
+            <system:String x:Key="TabSaveSettings">Save settings</system:String>
+            <system:String x:Key="LabelSourcepath">Source path</system:String>
+            <system:String x:Key="LabelDestinationpath">Destination path</system:String>
+            <system:String x:Key="CheckboxOverwriteSourceFiles">Overwrite source files</system:String>
+            <system:String x:Key="CheckboxUseSubdirectories">Process files in subdirectories</system:String>
+            <system:String x:Key="CheckboxResizeResults">Change result files resolution</system:String>
+            <system:String x:Key="CheckboxChangeResultFormat">Change result files format</system:String>
+            <system:String x:Key="ButtonSave">Save results</system:String>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

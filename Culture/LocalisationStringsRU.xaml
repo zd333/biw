@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="MainWindowTitle">Массовое добавление водяныех знаков в графические файлы </system:String>
+    <system:String x:Key="TabPathsName">Пути</system:String>
+    <system:String x:Key="TabAddWatermarksName">Добавление водяных знаков</system:String>
+    <system:String x:Key="TabWatermarkProperties">Свойства водяного знака</system:String>
+    <system:String x:Key="TabSaveSettings">Настройки сохранения результатов</system:String>
+    <system:String x:Key="LabelSourcepath">Путь к исходным файлам</system:String>
+    <system:String x:Key="LabelDestinationpath">Путь для сохранения результатов</system:String>
+    <system:String x:Key="CheckboxOverwriteSourceFiles">Заменить исходные файлы</system:String>
+    <system:String x:Key="CheckboxUseSubdirectories">Обрабатывать файлы во вложенных директориях</system:String>
+    <system:String x:Key="CheckboxResizeResults">Изменить разрешение результирующих файлов</system:String>
+    <system:String x:Key="CheckboxChangeResultFormat">Изменить формат результирующих файлов</system:String>
+    <system:String x:Key="ButtonSave">Сохранить результаты</system:String>
+</ResourceDictionary>
