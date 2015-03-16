@@ -1,8 +1,19 @@
 ﻿<Window x:Class="Bulk_Image_Watermark.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="{StaticResource MainWindowTitle}" Height="350" Width="525">
+
+    <DockPanel LastChildFill="True">
+        <TabControl DockPanel.Dock="Top" Height="100" VerticalAlignment="Top">
+            <TabItem Header="ttt">
+            </TabItem>
+            <TabItem Header="Add Watermarks">
+            </TabItem>
+            <TabItem Header="Watermark properties">
+            </TabItem>
+            <TabItem Header="Save settings">
+            </TabItem>
+        </TabControl>
+        <Canvas/>
+    </DockPanel>
 </Window>
