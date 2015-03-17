@@ -1,0 +1,79 @@
+﻿Bulk Image Watermark.g.en-US.resources:localisationstrings.baml,system:String_1:System.String.$Content,None,True,True,,name from loc file
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Window_1:Bulk_Image_Watermark.MainWindow.$Content,None,True,True,,#DockPanel_1;
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Window_1:System.Windows.Window.Title,Title,True,True,,Массовое
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Window_1:System.Windows.FrameworkElement.Height,None,False,True,,600
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Window_1:System.Windows.FrameworkElement.Width,None,False,True,,800
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Setter_1:System.Windows.Setter.Property,None,False,False,,Border.BorderBrush
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Setter_1:System.Windows.Setter.Value,None,False,True,,\#FF008000
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,DockPanel_1:System.Windows.Controls.DockPanel.LastChildFill,None,False,True,,True
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabControl_1:System.Windows.Controls.TabControl.$Content,None,False,True,,#TabItem_1;#TabItem_2;#TabItem_3;#TabItem_4;
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabControl_1:System.Windows.Controls.DockPanel.Dock,None,True,False,,Top
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabControl_1:System.Windows.FrameworkElement.VerticalAlignment,None,False,True,,Top
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabControl_1:System.Windows.FrameworkElement.Height,None,False,True,,150
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabItem_1:System.Windows.Controls.TabItem.$Content,Text,True,True,,#StackPanel_1;
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabItem_1:System.Windows.Controls.HeaderedContentControl.Header,Label,True,True,,Paths
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,StackPanel_1:System.Windows.Controls.StackPanel.Orientation,None,False,True,,Vertical
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,DockPanel_2:System.Windows.Controls.DockPanel.LastChildFill,None,False,True,,True
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Label_1:System.Windows.Controls.Label.$Content,Label,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Label_1:System.Windows.Controls.ContentControl.Content,Label,True,True,,Sourcepath}\\
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Label_1:System.Windows.Controls.DockPanel.Dock,Label,True,False,,Left
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSelectSourcePath:System.Windows.Controls.Button.$Content,Button,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSelectSourcePath:System.Windows.Controls.ContentControl.Content,Button,True,True,,...
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSelectSourcePath:System.Windows.Controls.DockPanel.Dock,Button,True,False,,Right
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSelectSourcePath:System.Windows.FrameworkElement.Width,None,False,True,,40
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,textBoxSourcePath:System.Windows.Controls.TextBox.$Content,Text,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxUseSubdirectories:System.Windows.Controls.CheckBox.$Content,CheckBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxUseSubdirectories:System.Windows.Controls.ContentControl.Content,CheckBox,True,True,,Process files in subdirectories
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxOverwriteSourceFiles:System.Windows.Controls.CheckBox.$Content,CheckBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxOverwriteSourceFiles:System.Windows.Controls.ContentControl.Content,CheckBox,True,True,,Overwrite source files
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxOverwriteSourceFiles:System.Windows.Controls.Control.Foreground,None,False,True,,\#FFFF0000
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,DockPanel_3:System.Windows.Controls.DockPanel.LastChildFill,None,False,True,,True
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Label_2:System.Windows.Controls.Label.$Content,Label,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Label_2:System.Windows.Controls.ContentControl.Content,Label,True,True,,Destination path
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Label_2:System.Windows.Controls.DockPanel.Dock,Label,True,False,,Left
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSelectDestinationPath:System.Windows.Controls.Button.$Content,Button,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSelectDestinationPath:System.Windows.Controls.ContentControl.Content,Button,True,True,,...
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSelectDestinationPath:System.Windows.Controls.DockPanel.Dock,Button,True,False,,Right
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSelectDestinationPath:System.Windows.FrameworkElement.Width,None,False,True,,40
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,textBoxDestinationPath:System.Windows.Controls.TextBox.$Content,Text,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabItem_2:System.Windows.Controls.TabItem.$Content,Text,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabItem_2:System.Windows.Controls.HeaderedContentControl.Header,Label,True,True,,Add watermarks
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabItem_3:System.Windows.Controls.TabItem.$Content,Text,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabItem_3:System.Windows.Controls.HeaderedContentControl.Header,Label,True,True,,Edit added watermark
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabItem_4:System.Windows.Controls.TabItem.$Content,Text,True,True,,#StackPanel_2;
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,TabItem_4:System.Windows.Controls.HeaderedContentControl.Header,Label,True,True,,Save settings
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,StackPanel_2:System.Windows.Controls.StackPanel.Orientation,None,False,True,,Vertical
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,StackPanel_3:System.Windows.Controls.StackPanel.Orientation,None,False,True,,Horizontal
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxResizeResults:System.Windows.Controls.CheckBox.$Content,CheckBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxResizeResults:System.Windows.Controls.ContentControl.Content,CheckBox,True,True,,Change result files resolution
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxResultResolution:System.Windows.Controls.ComboBox.$Content,ComboBox,True,True,,#comboBoxItem320;#comboBoxItem640;#comboBoxItem1024;
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItem320:System.Windows.Controls.ComboBoxItem.$Content,ComboBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItem320:System.Windows.Controls.ContentControl.Content,ComboBox,True,True,,320*240
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItem640:System.Windows.Controls.ComboBoxItem.$Content,ComboBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItem640:System.Windows.Controls.ContentControl.Content,ComboBox,True,True,,640*480
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItem1024:System.Windows.Controls.ComboBoxItem.$Content,ComboBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItem1024:System.Windows.Controls.ContentControl.Content,ComboBox,True,True,,1024*768
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItem1024:System.Windows.Controls.ListBoxItem.IsSelected,None,False,True,,True
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,StackPanel_4:System.Windows.Controls.StackPanel.Orientation,None,False,True,,Horizontal
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxChangeResultsFormat:System.Windows.Controls.CheckBox.$Content,CheckBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,checkBoxChangeResultsFormat:System.Windows.Controls.ContentControl.Content,CheckBox,True,True,,Change result file type
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxResultsFormat:System.Windows.Controls.ComboBox.$Content,ComboBox,True,True,,#comboBoxItemJPG;#comboBoxItemPNG;#comboBoxItemBMP;
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItemJPG:System.Windows.Controls.ComboBoxItem.$Content,ComboBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItemJPG:System.Windows.Controls.ContentControl.Content,ComboBox,True,True,,jpg
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItemJPG:System.Windows.Controls.ListBoxItem.IsSelected,None,False,True,,True
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItemPNG:System.Windows.Controls.ComboBoxItem.$Content,ComboBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItemPNG:System.Windows.Controls.ContentControl.Content,ComboBox,True,True,,png
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItemBMP:System.Windows.Controls.ComboBoxItem.$Content,ComboBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,comboBoxItemBMP:System.Windows.Controls.ContentControl.Content,ComboBox,True,True,,bmp
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,DockPanel_4:System.Windows.Controls.DockPanel.LastChildFill,None,False,True,,True
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSave:System.Windows.Controls.Button.$Content,Button,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSave:System.Windows.Controls.ContentControl.Content,Button,True,True,,Save results
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,buttonSave:System.Windows.Controls.DockPanel.Dock,Button,True,False,,Left
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,labelSaveMessage:System.Windows.Controls.Label.$Content,Label,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,labelSaveMessage:System.Windows.Controls.Control.Foreground,None,False,True,,\#FFFF0000
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,labelSaveMessage:System.Windows.Controls.ContentControl.Content,Label,True,True,,Test save message. Dont forget to remove.
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,listBoxPreview:System.Windows.Controls.ListBox.$Content,ListBox,True,True,,
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,listBoxPreview:System.Windows.FrameworkElement.Width,None,False,True,,100
+Bulk Image Watermark.g.en-US.resources:mainwindow.baml,Canvas_1:System.Windows.Controls.Panel.Background,None,False,True,,\#FFF5F5DC
+Bulk Image Watermark.g.en-US.resources:app.baml,Application_1:Bulk_Image_Watermark.App.$Content,None,True,True,,
+Bulk Image Watermark.g.en-US.resources:app.baml,ResourceDictionary_2:System.Windows.ResourceDictionary.Source,None,True,False,,Culture\\LocalisationStrings.xaml

@@ -1,0 +1,2 @@
+$lbl = "C:\Users\Zenbook\Documents\Visual Studio 2013\Projects\Bulk Image Watermark\manual localization\LocBaml.exe"
+&$lbl /generate "Bulk Image Watermark.resources.dll" /trans:resources.csv /cul:ru-RU /out:ru-RU

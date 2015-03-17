@@ -22,31 +22,7 @@ namespace Bulk_Image_Watermark
     {
         public MainWindow()
         {
-            SetLanguage();
             InitializeComponent();
-        }
-
-        private void SetLanguage()
-        {
-            //check current culture and add localisation if needed
-
-            ResourceDictionary dict = new ResourceDictionary();
-
-            switch (System.Threading.Thread.CurrentThread.CurrentCulture.LCID)
-            {
-                //russian
-                case 0x0419://RU
-                case 0x0422://UA
-                case 0x0423://BE
-                    dict.Source = new Uri("..\\Culture\\LocalisationStringsRU.xaml", UriKind.Relative);
-                    break;
-                //case XXX:
-                //    break;
-            }
-            if (dict.Source != null)
-            {
-                this.Resources.MergedDictionaries.Add(dict);
-            }
         }
     }
 }
