@@ -18,124 +18,66 @@
                         <TextBox x:Uid="textBoxSourcePath" Name="textBoxSourcePath"/>
                     </DockPanel>
                     <CheckBox x:Uid="checkBoxUseSubdirectories" Name="checkBoxUseSubdirectories"  Content="Process files in subdirectories"/>
-                    <CheckBox x:Uid="checkBoxOverwriteSourceFiles" Name="checkBoxOverwriteSourceFiles"  Content="Do not overwrite source files" Foreground="Red" IsChecked="True"/>
-                    <DockPanel x:Uid="DockPanel_3" LastChildFill="True" IsEnabled="{Binding ElementName=checkBoxOverwriteSourceFiles, Path=IsChecked}">
+                    <DockPanel x:Uid="DockPanel_3" LastChildFill="True">
                         <Label x:Uid="Label_2" Content="Destination path" DockPanel.Dock="Left"/>
                         <Button x:Uid="buttonSelectDestinationPath" Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40"/>
                         <TextBox x:Uid="textBoxDestinationPath" Name="textBoxDestinationPath"/>
                     </DockPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem x:Uid="TabItem_2" Header="Add watermarks">
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Name="textBoxWatermarkText" Text="BIM" Width="100"/>
-                    <Canvas Name="CanvasWatermarkImage" Background="AliceBlue" Width="100"/>
-                    <StackPanel Orientation="Vertical">
-                        <RadioButton Name="radioButtonAddWatermarkText" Content="Add text" IsChecked="True"/>
-                        <RadioButton Name="radioButtonAddWatermarkImage" Content="Add image"/>
-                    </StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        
-                        <Label Content="Num by X" Grid.Column="0" Grid.Row="0"/>
-                        <TextBox Name="textBoxNumX" Text="3" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center"/>
-                        
-                        <Label Content="Num by Y" Grid.Column="1" Grid.Row="0"/>
-                        <TextBox Name="textBoxNumY" Text="2" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center"/>
-
-                        <Label Content="Skew" Grid.Column="2" Grid.Row="0"/>
-                        <TextBox Name="textBoxNewWatermarkSkew" Text="0" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center"/>
-
-                        <Label Content="Rotate" Grid.Column="3" Grid.Row="0"/>
-                        <TextBox Name="textBoxNewWatermarkRotate" Text="0" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center"/>
-
-                        <Label Content="Blur" Grid.Column="4" Grid.Row="0"/>
-                        <TextBox Name="textBoxNewWatermarkBlur" Text="0" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center"/>
-
-                        <Label Content="Opacity" Grid.Column="5" Grid.Row="0"/>
-                        <TextBox Name="textBoxNewWatermarkOpacity" Text="0" Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center"/>
-                    </Grid>
-                </StackPanel>
-            </TabItem>
-            <TabItem x:Uid="TabItem_3" Header="Edit added watermark">
-                <Grid HorizontalAlignment="Left" >
+            <TabItem x:Uid="TabItem_2" Header="Add watermarks" Height="22" Margin="-1.8,-2,-1.8,0" VerticalAlignment="Bottom">
+                <Grid HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
+                    <Label Content="Warermark text" Grid.Column="0" Grid.Row="0"/>
+                    <TextBox Name="textBoxWatermarkText" Text="BIM" Width="150" Grid.Column="0" Grid.Row="1"/>
 
-                    <Label Content="Size" Grid.Column="0" Grid.Row="0"/>
-                    <TextBox Name="textBoxSize" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Button Name="buttonFont" Content="Font" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
 
-                    <Label Content="Pos X" Grid.Column="1" Grid.Row="0"/>
-                    <TextBox Name="textBoxPosX" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label Content="Watermark size %" Grid.Column="2" Grid.Row="0"/>
+                    <TextBox Name="textBoxWatermarkSize" Text="5" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label Content="Pos Y" Grid.Column="2" Grid.Row="0"/>
-                    <TextBox Name="textBoxPosY" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label Content="Num by X" Grid.Column="3" Grid.Row="0"/>
+                    <TextBox Name="textBoxNumX" Text="3" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label Content="Skew" Grid.Column="3" Grid.Row="0"/>
-                    <TextBox Name="textBoxCurWatermarkSkew" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label Content="Num by Y" Grid.Column="4" Grid.Row="0"/>
+                    <TextBox Name="textBoxNumY" Text="2" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label Content="Rotate" Grid.Column="4" Grid.Row="0"/>
-                    <TextBox Name="textBoxCurWatermarkRotate" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center"/>
-
-                    <Label Content="Blur" Grid.Column="5" Grid.Row="0"/>
-                    <TextBox Name="textBoxCurWatermarkBlur" Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center"/>
-
+                    <Label Content="Angle" Grid.Column="5" Grid.Row="0"/>
+                    <TextBox Name="textBoxNewWatermarkAngle" Text="0" Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center"/>                    
+                    
                     <Label Content="Opacity" Grid.Column="6" Grid.Row="0"/>
-                    <TextBox Name="textBoxCurWatermarkOpacity" Grid.Column="6" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <TextBox Name="textBoxNewWatermarkOpacity" Text="0" Grid.Column="6" Grid.Row="1" HorizontalContentAlignment="Center"/>
+
+                    <Button Name="buttonInsertWatermarks" Content="Insert watermarks" Grid.Column="7" Grid.Row="0" Grid.RowSpan="2"/>
                 </Grid>
             </TabItem>
             <TabItem x:Uid="TabItem_4" Header="Save settings">
                 <StackPanel x:Uid="StackPanel_2" Orientation="Vertical">
-                    <StackPanel x:Uid="StackPanel_3" Orientation="Horizontal">
-                        <CheckBox x:Uid="checkBoxResizeResults" Name="checkBoxResizeResults"  Content="Change result files resolution"/>
-                        <ComboBox x:Uid="comboBoxResultResolution" Name="comboBoxResultResolution" IsEnabled="{Binding ElementName=checkBoxResizeResults, Path=IsChecked}">
-                            <ComboBoxItem x:Uid="comboBoxItem320" Name="comboBoxItem320" Content="320*240"/>
-                            <ComboBoxItem x:Uid="comboBoxItem640" Name="comboBoxItem640" Content="640*480"/>
-                            <ComboBoxItem x:Uid="comboBoxItem1024" Name="comboBoxItem1024" Content="1024*768" IsSelected="True"/>
-                        </ComboBox>
-                        <StackPanel IsEnabled="{Binding ElementName=checkBoxResizeResults, Path=IsChecked}">
-                            <RadioButton Name="radioButtonResizeBeforeWatermarks" Content="Change resolution before adding watermarks" IsChecked="True"/>
-                            <RadioButton Name="radioButtonResizeAfterWatermarks" Content="Change resolution after adding watermarks"/>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel  x:Uid="StackPanel_4" Orientation="Horizontal">
-                        <CheckBox x:Uid="checkBoxChangeResultsFormat" Name="checkBoxChangeResultsFormat"  Content="Change result file type"/>
-                        <ComboBox x:Uid="comboBoxResultsFormat" Name="comboBoxResultsFormat" IsEnabled="{Binding ElementName=checkBoxChangeResultsFormat, Path=IsChecked}">
-                            <ComboBoxItem x:Uid="comboBoxItemJPG" Name="comboBoxItemJPG" Content="jpg" IsSelected="True"/>
-                            <ComboBoxItem x:Uid="comboBoxItemPNG" Name="comboBoxItemPNG" Content="png"/>
-                            <ComboBoxItem x:Uid="comboBoxItemBMP" Name="comboBoxItemBMP" Content="bmp"/>
-                        </ComboBox>
-                    </StackPanel>
-                    <DockPanel x:Uid="DockPanel_4" LastChildFill="True">
-                        <Button x:Uid="buttonSave" Name="buttonSave" Content="Save results" DockPanel.Dock="Left"/>
-                        <Label x:Uid="labelSaveMessage" Name="labelSaveMessage" Foreground="Red" Content="Test save message. Dont forget to remove."/>
-                    </DockPanel>
+                    <CheckBox x:Uid="checkBoxResizeResults" Name="checkBoxResizeResults"  Content="Change result files resolution"/>
+                    <ComboBox x:Uid="comboBoxResultResolution" Name="comboBoxResultResolution" HorizontalAlignment="Left" IsEnabled="{Binding ElementName=checkBoxResizeResults, Path=IsChecked}">
+                        <ComboBoxItem x:Uid="comboBoxItem320" Name="comboBoxItem320" Content="320*240"/>
+                        <ComboBoxItem x:Uid="comboBoxItem640" Name="comboBoxItem640" Content="640*480"/>
+                        <ComboBoxItem x:Uid="comboBoxItem1024" Name="comboBoxItem1024" Content="1024*768" IsSelected="True"/>
+                    </ComboBox>
+                    <Button x:Uid="buttonSave" Name="buttonSave" Content="Save results" HorizontalAlignment="Left" Click="buttonSave_Click"/>
                 </StackPanel>
             </TabItem>
         </TabControl>
-        <ListBox x:Uid="listBoxPreview" Name="listBoxPreview" Width="100"/>
-        <Canvas Name="CanvasPreview" x:Uid="Canvas_1" Background="Beige"/>
+        <ProgressBar Name="progressBar" DockPanel.Dock="Bottom" Height="20"/>
+        <ListBox x:Uid="listBoxPreview" Name="listBoxPreview" Width="100" ScrollViewer.CanContentScroll="False"/>
+        <Image Name="imagePreview"/>
     </DockPanel>
 </Window>
