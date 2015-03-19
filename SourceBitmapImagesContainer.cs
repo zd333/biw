@@ -1,43 +1,120 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Media.Imaging;
 
 namespace Bulk_Image_Watermark
 {
     class SourceBitmapImagesContainer
     {
-        public List<string> imageFileDirectoryPaths
+        public string baseDirectoryPath
         { get; private set; }
 
-        //????????????????????????
-        //not necessary?????????
-        public List<string> imageFileNamesWithoutExtension
-        { get; private set; }
+        public ObservableCollection<ImageFromFile> images
+        { get; set; }
 
+        private bool _keepSourceFilesInMemoryForUiPreview;
 
-        public List<BitmapImage> bitmapImages
-        { get; private set; }
-
-        public SourceBitmapImagesContainer(string sourceDirectoryPath, bool useSubDirectories)
+        public SourceBitmapImagesContainer(string sourceDirectoryPath, bool useSubDirectories, bool keepSourceFilesInMemoryForUiPreview)
         {
-            //SourceImage.BeginInit();
-            //SourceImage.UriSource = new Uri("C:\\Documents and Settings\\Zenbook\\Desktop\\111.jpg", UriKind.Absolute);
-            //SourceImage.EndInit();
+            baseDirectoryPath = string.Empty;
+            images = new ObservableCollection<ImageFromFile>();
+            _keepSourceFilesInMemoryForUiPreview = keepSourceFilesInMemoryForUiPreview;
 
+            if (Directory.Exists(sourceDirectoryPath))
+            {
+                baseDirectoryPath = sourceDirectoryPath;
+                ProcessDirectory(sourceDirectoryPath, useSubDirectories);
+            }
         }
 
-        public void RemoveAt(int i)
+        //separate method to use recurse
+        private void ProcessDirectory(string sourceDirectoryPath, bool useSubDirectories)
+        {
+            string[] fileEntries = Directory.GetFiles(sourceDirectoryPath);
+            foreach (string fileName in fileEntries)
+            {
+                ProcessFile(fileName);
+            }
+
+            if (useSubDirectories)
+            {
+                // Recurse into subdirectories of this directory. 
+                string[] subdirectoryEntries = Directory.GetDirectories(sourceDirectoryPath);
+                foreach (string subdirectory in subdirectoryEntries)
+                    ProcessDirectory(subdirectory, useSubDirectories);
+            }
+        }
+
+        private void ProcessFile(string path)
         {
             try
             {
-                bitmapImages.RemoveAt(i);
-                imageFileDirectoryPaths.RemoveAt(i);
-                imageFileNamesWithoutExtension.RemoveAt(i);
+                string ext = Path.GetExtension(path).ToLower();
+                ImageFiletypes ft;
+
+                switch (ext)
+                {
+                    case ".jpg":
+                    case ".jpeg":
+                        ft = ImageFiletypes.jpg;
+                        break;
+                    case ".png":
+                        ft = ImageFiletypes.png;
+                        break;
+                    case ".bmp":
+                        ft = ImageFiletypes.bmp;
+                        break;
+
+                    default:
+                        return;
+                }
+
+                string fnwe = Path.GetFileNameWithoutExtension(path);
+
+                string s = Path.GetDirectoryName(path);
+                string rp = s.Remove(s.IndexOf(baseDirectoryPath), baseDirectoryPath.Length);
+
+                BitmapImage bi = null;
+                if (_keepSourceFilesInMemoryForUiPreview)
+                {
+                    bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.UriSource = new Uri(path);
+                    bi.EndInit();
+                }
+
+                images.Add(new ImageFromFile(path, rp, fnwe, ft, bi));
             }
             catch (Exception)
             {
-                //do not transit exception
-                //just do nothing
+            }
+        }
+
+        public class ImageFromFile
+        {
+            public string imageFileDirectoryFullPath
+            { get; private set; }
+
+            public string imageFileDirectoryRelativeToBaseDirectoryPath
+            { get; private set; }
+
+            public string imageFileNameWithoutPathAndExtension
+            { get; private set; }
+
+            public ImageFiletypes imageFileType;
+
+            public BitmapImage bitmapImage
+            { get; private set; }
+
+            public ImageFromFile(string directoryFullPath, string directoryRelativeToBaseDirectoryPath, string nameWithoutPathAndExtension, ImageFiletypes type, BitmapImage image)
+            {
+                imageFileDirectoryFullPath = directoryFullPath;
+                imageFileDirectoryRelativeToBaseDirectoryPath = directoryRelativeToBaseDirectoryPath;
+                imageFileNameWithoutPathAndExtension = nameWithoutPathAndExtension;
+                imageFileType = type;
+                bitmapImage = image;                  
             }
         }
     }

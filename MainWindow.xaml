@@ -1,7 +1,7 @@
 ﻿<Window x:Uid="Window_1" x:Class="Bulk_Image_Watermark.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Bulk image watermark" Height="600" Width="800" MinHeight="250" MinWidth="300">
+        Title="Bulk image watermark" Height="480" Width="640" MinHeight="250" MinWidth="300">
     <Window.Resources>
         <Style x:Uid="Style_1" TargetType="Button">
             <Setter x:Uid="Setter_1" Property="BorderBrush" Value="Green"/>
@@ -10,17 +10,18 @@
 
     <DockPanel x:Uid="DockPanel_1" LastChildFill="True">
         <TabControl x:Uid="TabControl_1" DockPanel.Dock="Top" VerticalAlignment="Top" Padding="2">
-            <TabItem x:Uid="TabItem_1" Header="Paths">
+            <TabItem x:Uid="TabItem_1" Header="Select files">
                 <StackPanel x:Uid="StackPanel_1" Orientation="Vertical">
                     <DockPanel x:Uid="DockPanel_2" LastChildFill="True">
                         <Label x:Uid="Label_1" Content="Source path" DockPanel.Dock="Left"/>
-                        <Button x:Uid="buttonSelectSourcePath" Name="buttonSelectSourcePath" Content="..." DockPanel.Dock="Right" Width="40"/>
-                        <TextBox x:Uid="textBoxSourcePath" Name="textBoxSourcePath"/>
+                        <Button x:Uid="buttonSelectSourcePath" Name="buttonSelectSourcePath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectSourcePath_Click"/>
+                        <TextBox x:Uid="textBoxSourcePath" Name="textBoxSourcePath" TextChanged="textBoxSourcePath_TextChanged"/>
                     </DockPanel>
-                    <CheckBox x:Uid="checkBoxUseSubdirectories" Name="checkBoxUseSubdirectories"  Content="Process files in subdirectories"/>
+                    <CheckBox x:Uid="checkBoxUseSubdirectories" Name="checkBoxUseSubdirectories" IsChecked="True" Content="Process files in subdirectories"/>
+                    <CheckBox Name="checkBoxDontLoadAllSourceImagesToMemory" IsChecked="False" Content="Do not load source images for prevew (use to speed up)"/>
                     <DockPanel x:Uid="DockPanel_3" LastChildFill="True">
                         <Label x:Uid="Label_2" Content="Destination path" DockPanel.Dock="Left"/>
-                        <Button x:Uid="buttonSelectDestinationPath" Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40"/>
+                        <Button x:Uid="buttonSelectDestinationPath" Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectDestinationPath_Click"/>
                         <TextBox x:Uid="textBoxDestinationPath" Name="textBoxDestinationPath"/>
                     </DockPanel>
                 </StackPanel>
@@ -64,7 +65,7 @@
                     <Button Name="buttonInsertWatermarks" Content="Insert watermarks" Grid.Column="7" Grid.Row="0" Grid.RowSpan="2"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Uid="TabItem_4" Header="Save settings">
+            <TabItem x:Uid="TabItem_4" Header="Save">
                 <StackPanel x:Uid="StackPanel_2" Orientation="Vertical">
                     <CheckBox x:Uid="checkBoxResizeResults" Name="checkBoxResizeResults"  Content="Change result files resolution"/>
                     <ComboBox x:Uid="comboBoxResultResolution" Name="comboBoxResultResolution" HorizontalAlignment="Left" IsEnabled="{Binding ElementName=checkBoxResizeResults, Path=IsChecked}">
@@ -77,7 +78,13 @@
             </TabItem>
         </TabControl>
         <ProgressBar Name="progressBar" DockPanel.Dock="Bottom" Height="20"/>
-        <ListBox x:Uid="listBoxPreview" Name="listBoxPreview" Width="100" ScrollViewer.CanContentScroll="False"/>
+        <ListBox x:Uid="listBoxPreview" Name="listBoxPreview" Width="100" ScrollViewer.CanContentScroll="False">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Image/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <Image Name="imagePreview"/>
     </DockPanel>
 </Window>

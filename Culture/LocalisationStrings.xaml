@@ -2,5 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <!--Here we place strings used in code to localize them with LOCBAML-->
-    <system:String x:Uid="system:String_1" x:Key="keyName">name from loc file</system:String>
+    <system:String x:Key="warning">Warning</system:String>
+    <system:String x:Key="warningNoDestinationPath">Destination folder not selected!</system:String>
+    <system:String x:Key="warningDestinationSourcePathesTheSame">Source and destination folders are the same!</system:String>
+    <system:String x:Key="warningNoResultsToSave">There is nothing processed!</system:String>
 </ResourceDictionary>

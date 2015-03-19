@@ -15,20 +15,17 @@ namespace Bulk_Image_Watermark
         public int yLocationInPercent
         { get; set; }
 
-
         //returns actual x location in pixels according to the image size
         public int GetPixelXlocation(int recipientImageWidth)
         {
             return (recipientImageWidth / 100) * xLocationInPercent;
         }
 
-
         //returns actual y location in pixels according to the image size
         public int GetPixelYlocation(int recipientImageHeight)
         {
             return (recipientImageHeight / 100) * yLocationInPercent;
         }
-
 
         public int heightInPercent
         {
@@ -46,14 +43,12 @@ namespace Bulk_Image_Watermark
             }
         }
 
-
         //rotation angle
         public int angle
         {
             get;
             set;
         }
-
 
         public double opacity
         {
@@ -87,9 +82,7 @@ namespace Bulk_Image_Watermark
             h = (h / 100) * heightInPercent;
             return h;
         }
-
     }
-
 
     class TextWatermark : Watermark
     {
@@ -108,10 +101,8 @@ namespace Bulk_Image_Watermark
             }
         }
 
-
         public Typeface typeface
         { get; set; }
-
 
         public Brush foreground
         { get; set; }
@@ -124,7 +115,6 @@ namespace Bulk_Image_Watermark
             foreground = Foreground;
         }
 
-
         public FormattedText GetFormattedText(int recipientImageWidth, int recipientImageHeight)
         {
             return new FormattedText(text,
@@ -134,16 +124,12 @@ namespace Bulk_Image_Watermark
                 GetPixelHeight(recipientImageWidth, recipientImageHeight),
                 foreground);
         }
-
     }
-
 
     class ImageWatermark : Watermark
     {
         public BitmapImage image
         { get; private set; }
-
-
 
         public ImageWatermark(BitmapImage Image, int HeightInPercent, int Angle, double Opacity)
             :base(HeightInPercent, Angle, Opacity)
@@ -162,6 +148,5 @@ namespace Bulk_Image_Watermark
             catch (Exception)
             { }
         }
-
     }
 }
