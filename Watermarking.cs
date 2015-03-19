@@ -10,12 +10,45 @@ namespace Bulk_Image_Watermark
 {
     enum ImageFiletypes
     { jpg, png, bmp}
-    class WatermarkedImage
+    static class Watermarking
     {
-        private BitmapEncoder be;
-
-        public WatermarkedImage(ImageFiletypes FileFormat, BitmapImage SourceImage, List<Watermark> Watermarks)
+        public static bool WatermarkBitmapImageAndSaveToFile(ImageFiletypes fileFormat, BitmapImage sourceImage, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
         {
+            RenderTargetBitmap rtb = CreateWatermarkedBitmapEncoder(sourceImage, watermarks);
+            return SaveImage(rtb, fileFormat, saveDirectoryPath, fileNameWithoutExtensionAndPath);
+        }
+        public static bool WatermarkImageFromFileAndSaveToFile(ImageFiletypes fileFormat, string path, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
+        {
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(path);
+            bi.EndInit();
+            return WatermarkBitmapImageAndSaveToFile(fileFormat, bi, watermarks, saveDirectoryPath, fileNameWithoutExtensionAndPath);            
+        }
+
+        public static BitmapImage GetImageFromBitmapImageForUi(BitmapImage SourceImage, List<Watermark> Watermarks)
+        {
+            //?????????????????????????????
+            //change return type? (what is better for UIconctrol?)
+            //after adding usercontrols on preview this method will become not necessary
+
+            return null;
+        }
+
+        public static BitmapImage GetImageFromFileForUi(string path, List<Watermark> Watermarks)
+        {
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(path);
+            bi.EndInit();
+            return GetImageFromBitmapImageForUi(bi, Watermarks);
+        }
+
+
+        //??????????????????????????????
+        //change return type? what is better for both UIcontrol source and saving to file?
+        private static RenderTargetBitmap CreateWatermarkedBitmapEncoder(BitmapImage SourceImage, List<Watermark> Watermarks)
+        {            
             DrawingVisual visual = new DrawingVisual();
 
             using (DrawingContext dc = visual.RenderOpen())
@@ -46,11 +79,19 @@ namespace Bulk_Image_Watermark
                             //?????????????????????????????????????????????
                             //will add image watermarks here
                         }
-
                     dc.Pop();
                 }
             }
 
+            RenderTargetBitmap rtb = new RenderTargetBitmap(SourceImage.PixelWidth, SourceImage.PixelHeight, 96, 96, PixelFormats.Pbgra32);
+            rtb.Render(visual);
+
+            return rtb;
+        }
+
+        private static bool SaveImage(RenderTargetBitmap rtb, ImageFiletypes FileFormat, string SaveDirectoryPath, string FileNameWithoutExtensionAndPath)
+        {
+            BitmapEncoder be;
             switch (FileFormat)
             {
                 case ImageFiletypes.bmp:
@@ -60,22 +101,14 @@ namespace Bulk_Image_Watermark
                 case ImageFiletypes.png:
                     be = new PngBitmapEncoder();
                     break;
-                    
+
                 case ImageFiletypes.jpg:
                 default:
                     be = new JpegBitmapEncoder();
                     break;
             }
 
-            RenderTargetBitmap rtb = new RenderTargetBitmap(SourceImage.PixelWidth, SourceImage.PixelHeight, 96, 96, PixelFormats.Pbgra32);
-            rtb.Render(visual);
-            be.Frames.Add(BitmapFrame.Create(rtb));            
-        }
-
-
-        public bool SaveImage(string SaveDirectoryPath, string FileNameWithoutExtensionAndPath)
-        {
-            if (be == null) return false;
+            be.Frames.Add(BitmapFrame.Create(rtb));
             
             string ext = ".jpeg";
             Type t = be.GetType();
@@ -96,14 +129,6 @@ namespace Bulk_Image_Watermark
             {
                 return false;
             }
-        }
-
-        public ImageSource GetImageForUI()
-        {
-            if (be == null) return null;
-
-
-            return null;
         }
     }
 }
