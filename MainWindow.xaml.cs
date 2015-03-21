@@ -14,6 +14,7 @@ using System.Globalization;
 using System.IO;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
+using System.Collections.Specialized;
 
 
 namespace Bulk_Image_Watermark
@@ -23,81 +24,54 @@ namespace Bulk_Image_Watermark
     /// </summary>
     public partial class MainWindow : Window
     {
+        //one main container
         SourceBitmapImagesContainer sourceContainer;
 
-
-
-
-
-
-
-        public ObservableCollection<BitmapImage> rrr;
-
-
-
-
-
+        //source property for preview
+        public BitmapImage bitmapForPrevew;
 
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = this;
+
+            //preview listbox items count changed handler
+            //do not use XAML binding because cant control items==null
+            ((INotifyCollectionChanged)listBoxPreview.Items).CollectionChanged += listBoxPreviewItemsCollectionChanged;
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             if (sourceContainer == null)
             {
-                TryToShowMessageBoxFromResourceDictionary("warningNoResultsToSave", "warning", MessageBoxImage.Error);
+                ShowMessageBoxFromResourceDictionary("warningNoResultsToSave", "warning", MessageBoxImage.Error);
                 return;
             }
-                string savePath = textBoxDestinationPath.Text;
-                if (savePath.Length == 0)
-                {
-                    TryToShowMessageBoxFromResourceDictionary("warningNoDestinationPath", "warning", MessageBoxImage.Error);
-                    return;
-                }
-                if (savePath.ToLower().Equals(sourceContainer.baseDirectoryPath.ToLower()))
-                {
-                    TryToShowMessageBoxFromResourceDictionary("warningDestinationSourcePathesTheSame", "warning", MessageBoxImage.Error);
-                    return;                
-                }
-            
+            string savePath = textBoxDestinationPath.Text;
+            if (savePath.Length == 0)
+            {
+                ShowMessageBoxFromResourceDictionary("warningNoDestinationPath", "warning", MessageBoxImage.Error);
+                return;
+            }
+            if (savePath.ToLower().Equals(sourceContainer.baseDirectoryPath.ToLower()))
+            {
+                ShowMessageBoxFromResourceDictionary("warningDestinationSourcePathesTheSame", "warning", MessageBoxImage.Error);
+                return;
+            }
         }
+
 
         private void buttonSelectSourcePath_Click(object sender, RoutedEventArgs e)
         {
-            rrr = new ObservableCollection<BitmapImage>();
-            BitmapImage fff = new BitmapImage();
-            fff.BeginInit();
-            fff.UriSource = new Uri("C:\\111\\111.jpg");
-            fff.EndInit();
-            rrr.Add(fff);
+            //initialise source images container
 
-            fff = new BitmapImage();
-            fff.BeginInit();
-            fff.UriSource = new Uri("C:\\111\\222.jpg");
-            fff.EndInit();
-            rrr.Add(fff);
-
-            Binding b = new Binding();
-            b.Source = rrr;
-            listBoxPreview.SetBinding(ListBox.ItemsSourceProperty, b);
-
-            MessageBox.Show(listBoxPreview.ItemsSource.ToString());
-            
-
-            ////initialise source images container
-
-            ////??????????????????????????????????????????????
-            ////to add - create own wpf folder browser dialog to avoid using winforms
-            //var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            //dialog.ShowNewFolderButton = false;
-            //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    textBoxSourcePath.Text = dialog.SelectedPath;
-            //}
-
+            //??????????????????????????????????????????????
+            //to add - create own wpf folder browser dialog to avoid using winforms
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            dialog.ShowNewFolderButton = false;
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBoxSourcePath.Text = dialog.SelectedPath;
+            }
         }
 
         private void buttonSelectDestinationPath_Click(object sender, RoutedEventArgs e)
@@ -111,7 +85,8 @@ namespace Bulk_Image_Watermark
             }
         }
 
-        private void TryToShowMessageBoxFromResourceDictionary(string messageResourceKey, string captionResourceKey, MessageBoxImage icon)
+        //custom method to show message box with strings from resources
+        private void ShowMessageBoxFromResourceDictionary(string messageResourceKey, string captionResourceKey, MessageBoxImage icon)
         {
             try
             {
@@ -124,13 +99,106 @@ namespace Bulk_Image_Watermark
             }
         }
 
-        private void textBoxSourcePath_TextChanged(object sender, TextChangedEventArgs e)
+        private void LoadSourceImagesToContainer()
         {
-            //??????????????????????????????????????????????
-            //need to do this in external thread
-            sourceContainer = new SourceBitmapImagesContainer(((TextBox)sender).Text,
+            //disable controls than can start this method
+            //??????????????????????????????????????????????????
+            //add cancelation and restart mechanism instead of disabling
+            buttonLoadSourceImages.IsEnabled = false;
+            checkBoxDontLoadAllSourceImagesToMemory.IsEnabled = false;
+
+            sourceContainer = new SourceBitmapImagesContainer(textBoxSourcePath.Text,
                 checkBoxUseSubdirectories.IsChecked.GetValueOrDefault(),
                 !checkBoxDontLoadAllSourceImagesToMemory.IsChecked.GetValueOrDefault());
+
+            listBoxPreview.Resources["previewImages"] = sourceContainer.images;
+
+            buttonLoadSourceImages.IsEnabled = true;
+            checkBoxDontLoadAllSourceImagesToMemory.IsEnabled = true;
+            
+            renderPreviewImage();
         }
-    }
+
+        private void checkBoxDontLoadAllSourceImagesToMemory_Click(object sender, RoutedEventArgs e)
+        {
+            LoadSourceImagesToContainer();
+        }
+
+        //delete selected objects from source container, which property set as dictionary source for listbox
+        private void DeleteSourceImageFromResource(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.Collections.IList l = listBoxPreview.SelectedItems;
+                foreach (object x in l)                    
+                    sourceContainer.images.Remove((ImageFromFile)x);
+            }
+            catch (Exception)
+            {}
+        }
+
+        private void listBoxPreview_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //put selected item on preview
+            renderPreviewImage();
+        }
+
+        private void renderPreviewImage()
+        {
+            //put image on preview panel
+            if (sourceContainer != null)
+                if ((sourceContainer.images.Count == 0) || (checkBoxDontLoadAllSourceImagesToMemory.IsChecked == true))
+                {
+                    //no images selected or user admited not to load images to memory
+                    BitmapImage bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.UriSource = new Uri("pack://application:,,,/Binary resources/placeholder.jpg");
+                    bi.EndInit();
+                    bitmapForPrevew = bi;
+                }
+                else
+                    if (listBoxPreview.SelectedItem != null)
+                        bitmapForPrevew = ((ImageFromFile)listBoxPreview.SelectedItem).bitmapImage;
+                    else
+                        bitmapForPrevew = sourceContainer.images[0].bitmapImage;
+
+            //???????????????????????????????????????????
+            //need to copy full object to bitmapimage, link dont pass
+            ImageSource isrc = bitmapForPrevew;
+            imagePreview.Source = isrc;
+
+            //???????????????????????????????
+            //this part of method will be not necessary after adorner addition
+
+        }
+
+        private void buttonInsertWatermarks_Click(object sender, RoutedEventArgs e)
+        {
+            renderPreviewImage();
+        }
+
+        //hide/show preview listbox depending to items are emty
+        private void listBoxPreviewItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            try
+            {
+                ItemCollection l = (ItemCollection)sender;
+                if (l != null)
+                    //there is no items in listbox or user admited not to load source images to memory
+                    if ((l.Count > 0) && (checkBoxDontLoadAllSourceImagesToMemory.IsChecked == false))
+                    {
+                        listBoxPreview.Visibility = Visibility.Visible;
+                        return;
+                    }
+                listBoxPreview.Visibility = Visibility.Collapsed;
+            }
+                catch(Exception)
+            {}
+        }
+         
+        private void buttonLoadSourceImages_Click(object sender, RoutedEventArgs e)
+        {
+            LoadSourceImagesToContainer();
+        }
+    }    
 }

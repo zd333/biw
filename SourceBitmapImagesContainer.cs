@@ -6,12 +6,19 @@ using System.Windows.Media.Imaging;
 
 namespace Bulk_Image_Watermark
 {
+    public class BitmapImageCollectionForXaml : ObservableCollection<ImageFromFile>
+    {
+        public BitmapImageCollectionForXaml()
+            : base()
+        { }
+    }
+
     class SourceBitmapImagesContainer
     {
         public string baseDirectoryPath
         { get; private set; }
 
-        public ObservableCollection<ImageFromFile> images
+        public BitmapImageCollectionForXaml images
         { get; set; }
 
         private bool _keepSourceFilesInMemoryForUiPreview;
@@ -19,7 +26,7 @@ namespace Bulk_Image_Watermark
         public SourceBitmapImagesContainer(string sourceDirectoryPath, bool useSubDirectories, bool keepSourceFilesInMemoryForUiPreview)
         {
             baseDirectoryPath = string.Empty;
-            images = new ObservableCollection<ImageFromFile>();
+            images = new BitmapImageCollectionForXaml();
             _keepSourceFilesInMemoryForUiPreview = keepSourceFilesInMemoryForUiPreview;
 
             if (Directory.Exists(sourceDirectoryPath))
@@ -91,31 +98,31 @@ namespace Bulk_Image_Watermark
             {
             }
         }
+    }
 
-        public class ImageFromFile
+    public class ImageFromFile
+    {
+        public string imageFileDirectoryFullPath
+        { get; private set; }
+
+        public string imageFileDirectoryRelativeToBaseDirectoryPath
+        { get; private set; }
+
+        public string imageFileNameWithoutPathAndExtension
+        { get; private set; }
+
+        public ImageFiletypes imageFileType;
+
+        public BitmapImage bitmapImage
+        { get; private set; }
+
+        public ImageFromFile(string directoryFullPath, string directoryRelativeToBaseDirectoryPath, string nameWithoutPathAndExtension, ImageFiletypes type, BitmapImage image)
         {
-            public string imageFileDirectoryFullPath
-            { get; private set; }
-
-            public string imageFileDirectoryRelativeToBaseDirectoryPath
-            { get; private set; }
-
-            public string imageFileNameWithoutPathAndExtension
-            { get; private set; }
-
-            public ImageFiletypes imageFileType;
-
-            public BitmapImage bitmapImage
-            { get; private set; }
-
-            public ImageFromFile(string directoryFullPath, string directoryRelativeToBaseDirectoryPath, string nameWithoutPathAndExtension, ImageFiletypes type, BitmapImage image)
-            {
-                imageFileDirectoryFullPath = directoryFullPath;
-                imageFileDirectoryRelativeToBaseDirectoryPath = directoryRelativeToBaseDirectoryPath;
-                imageFileNameWithoutPathAndExtension = nameWithoutPathAndExtension;
-                imageFileType = type;
-                bitmapImage = image;                  
-            }
+            imageFileDirectoryFullPath = directoryFullPath;
+            imageFileDirectoryRelativeToBaseDirectoryPath = directoryRelativeToBaseDirectoryPath;
+            imageFileNameWithoutPathAndExtension = nameWithoutPathAndExtension;
+            imageFileType = type;
+            bitmapImage = image;
         }
     }
 }

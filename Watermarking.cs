@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 
 namespace Bulk_Image_Watermark
 {
-    enum ImageFiletypes
+    public enum ImageFiletypes
     { jpg, png, bmp}
     static class Watermarking
     {
