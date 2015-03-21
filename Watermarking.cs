@@ -26,27 +26,24 @@ namespace Bulk_Image_Watermark
             return WatermarkBitmapImageAndSaveToFile(fileFormat, bi, watermarks, saveDirectoryPath, fileNameWithoutExtensionAndPath);            
         }
 
-        public static BitmapImage GetImageFromBitmapImageForUi(BitmapImage SourceImage, List<Watermark> Watermarks)
+        public static BitmapSource GetImageFromBitmapImageForUi(BitmapImage sourceImage, List<Watermark> watermarks)
         {
-            //?????????????????????????????
-            //change return type? (what is better for UIconctrol?)
-            //after adding usercontrols on preview this method will become not necessary
+            //????????????????????????????????????????????????????????
+            //with adorners this method will become not necessary
+            RenderTargetBitmap rtb = CreateWatermarkedBitmapEncoder(sourceImage, watermarks);
 
-            return null;
+            return rtb;
         }
 
-        public static BitmapImage GetImageFromFileForUi(string path, List<Watermark> Watermarks)
+        public static BitmapSource GetImageFromFileForUi(string path, List<Watermark> watermarks)
         {
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
             bi.UriSource = new Uri(path);
             bi.EndInit();
-            return GetImageFromBitmapImageForUi(bi, Watermarks);
+            return GetImageFromBitmapImageForUi(bi, watermarks);
         }
 
-
-        //??????????????????????????????
-        //change return type? what is better for both UIcontrol source and saving to file?
         private static RenderTargetBitmap CreateWatermarkedBitmapEncoder(BitmapImage SourceImage, List<Watermark> Watermarks)
         {            
             DrawingVisual visual = new DrawingVisual();
@@ -79,7 +76,8 @@ namespace Bulk_Image_Watermark
                             //?????????????????????????????????????????????
                             //will add image watermarks here
                         }
-                    dc.Pop();
+                    dc.Pop();//pop opacity
+                    dc.Pop();//pop rotation
                 }
             }
 

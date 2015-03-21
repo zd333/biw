@@ -24,23 +24,37 @@ namespace Bulk_Image_Watermark
     /// </summary>
     public partial class MainWindow : Window
     {
-        //one main container
-        SourceBitmapImagesContainer sourceContainer;
+        //global source images container
+        private SourceBitmapImagesContainer sourceContainer;
+
+        //global watermark list
+        private List<Watermark> watermarks = new List<Watermark>();
 
         //source property for preview
-        public BitmapImage bitmapForPrevew;
+        private BitmapSource bitmapForPreview;
+
+        //global current typeface
+        //????????????????????????????????????????
+        //will not need this with adorners
+        Typeface curTypeface = new Typeface("Arial");
+
+        //global current font color
+        //????????????????????????????????????????
+        //will not need this with adorners
+        Brush curFontColor = Brushes.GreenYellow;
 
         public MainWindow()
         {
             InitializeComponent();
 
             //preview listbox items count changed handler
-            //do not use XAML binding because cant control items==null
+            //do not use XAML binding because of cant control items==null
             ((INotifyCollectionChanged)listBoxPreview.Items).CollectionChanged += listBoxPreviewItemsCollectionChanged;
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
+            //check save settings
             if (sourceContainer == null)
             {
                 ShowMessageBoxFromResourceDictionary("warningNoResultsToSave", "warning", MessageBoxImage.Error);
@@ -57,13 +71,14 @@ namespace Bulk_Image_Watermark
                 ShowMessageBoxFromResourceDictionary("warningDestinationSourcePathesTheSame", "warning", MessageBoxImage.Error);
                 return;
             }
+
+            //??????????????????????????????????????
+            //image processing and saving
         }
 
 
         private void buttonSelectSourcePath_Click(object sender, RoutedEventArgs e)
         {
-            //initialise source images container
-
             //??????????????????????????????????????????????
             //to add - create own wpf folder browser dialog to avoid using winforms
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -101,7 +116,7 @@ namespace Bulk_Image_Watermark
 
         private void LoadSourceImagesToContainer()
         {
-            //disable controls than can start this method
+            //disable controls that can start this method
             //??????????????????????????????????????????????????
             //add cancelation and restart mechanism instead of disabling
             buttonLoadSourceImages.IsEnabled = false;
@@ -124,6 +139,7 @@ namespace Bulk_Image_Watermark
             LoadSourceImagesToContainer();
         }
 
+        //preview listbox context menu remove pressed handler
         //delete selected objects from source container, which property set as dictionary source for listbox
         private void DeleteSourceImageFromResource(object sender, RoutedEventArgs e)
         {
@@ -139,41 +155,61 @@ namespace Bulk_Image_Watermark
 
         private void listBoxPreview_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //put selected item on preview
+            //change image and render watermarks
             renderPreviewImage();
         }
 
         private void renderPreviewImage()
         {
             //put image on preview panel
+            BitmapImage tbi = new BitmapImage();
             if (sourceContainer != null)
                 if ((sourceContainer.images.Count == 0) || (checkBoxDontLoadAllSourceImagesToMemory.IsChecked == true))
                 {
                     //no images selected or user admited not to load images to memory
-                    BitmapImage bi = new BitmapImage();
-                    bi.BeginInit();
-                    bi.UriSource = new Uri("pack://application:,,,/Binary resources/placeholder.jpg");
-                    bi.EndInit();
-                    bitmapForPrevew = bi;
+                    tbi = GetResourcesPlaceholderMemoryClone();
                 }
                 else
                     if (listBoxPreview.SelectedItem != null)
-                        bitmapForPrevew = ((ImageFromFile)listBoxPreview.SelectedItem).bitmapImage;
+                        tbi = ((ImageFromFile)listBoxPreview.SelectedItem).bitmapImage.CloneCurrentValue();
                     else
-                        bitmapForPrevew = sourceContainer.images[0].bitmapImage;
-
-            //???????????????????????????????????????????
-            //need to copy full object to bitmapimage, link dont pass
-            ImageSource isrc = bitmapForPrevew;
-            imagePreview.Source = isrc;
+                        tbi = sourceContainer.images[0].bitmapImage.CloneCurrentValue();
+            else
+                //no images selected
+                tbi = GetResourcesPlaceholderMemoryClone();
 
             //???????????????????????????????
             //this part of method will be not necessary after adorner addition
+            //create watermarks and place them on preview image
 
+            bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(tbi,watermarks);
+            ImageSource isrc = bitmapForPreview;
+            imagePreview.Source = isrc;
+        }
+
+        private BitmapImage GetResourcesPlaceholderMemoryClone()
+        {
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri("pack://application:,,,/Binary resources/placeholder.jpg");
+            bi.EndInit();
+            return bi.CloneCurrentValue();
         }
 
         private void buttonInsertWatermarks_Click(object sender, RoutedEventArgs e)
         {
+            //change image and render watermarks
+            //just testing now
+            //????????????????????????????????????????????????
+            int size, ang, op, x, y;
+            int.TryParse(textBoxWatermarkSize.Text, out size);
+            int.TryParse(textBoxWatermarkAngle.Text, out ang);
+            int.TryParse(textBoxWatermarkOpacity.Text, out op);
+            x = 50;
+            y = 50;
+
+            watermarks.Add(new TextWatermark(textBoxWatermarkText.Text, curTypeface, curFontColor, size, ang, 1 - op / 100, x, y));
+
             renderPreviewImage();
         }
 
@@ -199,6 +235,13 @@ namespace Bulk_Image_Watermark
         private void buttonLoadSourceImages_Click(object sender, RoutedEventArgs e)
         {
             LoadSourceImagesToContainer();
+        }
+
+        private void buttonDeleteWatermarks_Click(object sender, RoutedEventArgs e)
+        {
+            //remove all watermarks and rewrite image
+            watermarks.Clear();
+            renderPreviewImage();
         }
     }    
 }

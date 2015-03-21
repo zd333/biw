@@ -27,50 +27,49 @@ namespace Bulk_Image_Watermark
             return (recipientImageHeight / 100) * yLocationInPercent;
         }
 
+        private int _heightInPercent;
         public int heightInPercent
         {
-            get { return heightInPercent; }
+            get { return _heightInPercent; }
             set
             {
                 if (value < 1)
-                {
-                    heightInPercent = 5;//optimal default value
-                }
-                else if (value > 50)
-                {
-                    heightInPercent = 50;//too big number
-                }
+                    _heightInPercent = 5;//optimal default value
+                else
+                    if (value > 50)
+                        _heightInPercent = 50;//too big number
+                    else
+                        _heightInPercent = value;
             }
         }
 
         //rotation angle
         public int angle
-        {
-            get;
-            set;
-        }
+        { get; set;}
 
+        private double _opacity;
         public double opacity
         {
-            get { return opacity; }
+            get { return _opacity; }
             set
             {
                 if (value > 1)
-                {
-                    opacity = 1;
-                }
-                else if (value < 0.05)
-                {
-                    opacity = 0.05;//to avoid invisibility
-                }
+                    _opacity = 1;
+                else
+                    if (value < 0.05)
+                        _opacity = 0.05;//to avoid invisibility
+                    else
+                        _opacity = value;
             }
         }
 
-        public Watermark(int HeightInPercent, int Angle, double Opacity)
+        public Watermark(int HeightInPercent, int Angle, double Opacity, int XlocationInPercent, int YlocationInPercent)
         {
-            heightInPercent = heightInPercent;
+            heightInPercent = HeightInPercent;
             angle = Angle;
             opacity = Opacity;
+            xLocationInPercent = XlocationInPercent;
+            yLocationInPercent = YlocationInPercent;
         }
 
 
@@ -86,18 +85,19 @@ namespace Bulk_Image_Watermark
 
     class TextWatermark : Watermark
     {
+        private string _text;
         public string text
         {
             get
             {
-                return text;
+                return _text;
             }
             set
             {
                 if (value.Length > 50)
-                {
-                    text = value.Substring(0, 50);
-                }
+                    _text = value.Substring(0, 50);
+                else
+                    _text = value;
             }
         }
 
@@ -107,8 +107,8 @@ namespace Bulk_Image_Watermark
         public Brush foreground
         { get; set; }
 
-        public TextWatermark(string Text, Typeface Font, Brush Foreground, int HeightInPercent, int Angle, double Opacity)
-            :base(HeightInPercent, Angle, Opacity)
+        public TextWatermark(string Text, Typeface Font, Brush Foreground, int HeightInPercent, int Angle, double Opacity, int XlocationInPercent, int YlocationInPercent)
+            :base(HeightInPercent, Angle, Opacity, XlocationInPercent, YlocationInPercent)
         {
             text = Text;
             typeface = Font;
@@ -131,8 +131,8 @@ namespace Bulk_Image_Watermark
         public BitmapImage image
         { get; private set; }
 
-        public ImageWatermark(BitmapImage Image, int HeightInPercent, int Angle, double Opacity)
-            :base(HeightInPercent, Angle, Opacity)
+        public ImageWatermark(BitmapImage Image, int HeightInPercent, int Angle, double Opacity, int XlocationInPercent, int YlocationInPercent)
+            :base(HeightInPercent, Angle, Opacity, XlocationInPercent, YlocationInPercent)
         {
             image = Image;
         }
