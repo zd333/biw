@@ -10,7 +10,7 @@ namespace Bulk_Image_Watermark
     {
         public BitmapImageCollectionForXaml()
             : base()
-        { }
+        {}
     }
 
     class SourceBitmapImagesContainer

@@ -179,9 +179,9 @@ namespace Bulk_Image_Watermark
                 tbi = GetResourcesPlaceholderMemoryClone();
 
             //???????????????????????????????
-            //this part of method will be not necessary after adorner addition
+            //this part of method will be not necessary with adorners
+            
             //create watermarks and place them on preview image
-
             bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(tbi,watermarks);
             ImageSource isrc = bitmapForPreview;
             imagePreview.Source = isrc;
@@ -202,13 +202,31 @@ namespace Bulk_Image_Watermark
             //just testing now
             //????????????????????????????????????????????????
             int size, ang, op, x, y;
+            size = 5;
+            ang = 45;
+            op = 50;
             int.TryParse(textBoxWatermarkSize.Text, out size);
             int.TryParse(textBoxWatermarkAngle.Text, out ang);
             int.TryParse(textBoxWatermarkOpacity.Text, out op);
             x = 50;
             y = 50;
 
-            watermarks.Add(new TextWatermark(textBoxWatermarkText.Text, curTypeface, curFontColor, size, ang, 1 - op / 100, x, y));
+            int numx = 1;
+            int numy = 1;
+            int.TryParse(textBoxNumX.Text,out numx);
+            int.TryParse(textBoxNumY.Text,out numy);
+
+            int stepx = 100/(numx+1);
+            int stepy = 100/(numy+1);
+
+            for (int xi = 1; xi <= numx; xi++)
+                for (int yi = 1; yi <= numy; yi++)
+                {
+                    x = xi * stepx;
+                    y = yi * stepy;
+                    double dop =1.0 - op / 100.0;
+                    watermarks.Add(new TextWatermark(textBoxWatermarkText.Text, curTypeface, curFontColor, size, ang, dop, x, y));
+                }
 
             renderPreviewImage();
         }

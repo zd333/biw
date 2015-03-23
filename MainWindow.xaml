@@ -10,6 +10,7 @@
         <Style x:Uid="Style_1" TargetType="{x:Type Button}">
             <Setter x:Uid="Setter_1" Property="BorderBrush" Value="Green"/>
         </Style>
+        <BooleanToVisibilityConverter x:Uid="BooleanToVisibilityConverter_1" x:Key="booltoVis"/>
     </Window.Resources>
 
     <DockPanel x:Uid="DockPanel_1" LastChildFill="True">
@@ -18,12 +19,12 @@
                 <StackPanel x:Uid="StackPanel_1" Orientation="Vertical">
                     <DockPanel x:Uid="DockPanel_2" LastChildFill="True">
                         <Label x:Uid="Label_1" Content="Source path" DockPanel.Dock="Left"/>
-                        <Button x:Name="buttonLoadSourceImages" Content="Load images" DockPanel.Dock="Right" Click="buttonLoadSourceImages_Click"/>
+                        <Button x:Uid="buttonLoadSourceImages" x:Name="buttonLoadSourceImages" Content="Load images" DockPanel.Dock="Right" Click="buttonLoadSourceImages_Click"/>
                         <Button x:Uid="buttonSelectSourcePath" x:Name="buttonSelectSourcePath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectSourcePath_Click"/>
                         <TextBox x:Uid="textBoxSourcePath" x:Name="textBoxSourcePath"/>
                     </DockPanel>
                     <CheckBox x:Uid="checkBoxUseSubdirectories" x:Name="checkBoxUseSubdirectories" IsChecked="True" Content="Process files in subdirectories"/>
-                    <CheckBox x:Name="checkBoxDontLoadAllSourceImagesToMemory" IsChecked="False" Content="Do not load source images for prevew (use to speed up)" Click="checkBoxDontLoadAllSourceImagesToMemory_Click"/>
+                    <CheckBox x:Uid="checkBoxDontLoadAllSourceImagesToMemory" x:Name="checkBoxDontLoadAllSourceImagesToMemory" IsChecked="False" Content="Do not load source images for prevew (use to speed up)" Click="checkBoxDontLoadAllSourceImagesToMemory_Click"/>
                     <DockPanel x:Uid="DockPanel_3" LastChildFill="True">
                         <Label x:Uid="Label_2" Content="Destination path" DockPanel.Dock="Left"/>
                         <Button x:Uid="buttonSelectDestinationPath" x:Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectDestinationPath_Click"/>
@@ -32,52 +33,52 @@
                 </StackPanel>
             </TabItem>
             <TabItem x:Uid="TabItem_2" Header="Edit watermarks" Height="22" VerticalAlignment="Bottom">
-                <Grid HorizontalAlignment="Left">
+                <Grid x:Uid="Grid_1" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_1" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_2" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_3" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_4" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_5" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_6" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_7" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_8" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_9" Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition x:Uid="RowDefinition_1"/>
+                        <RowDefinition x:Uid="RowDefinition_2"/>
                     </Grid.RowDefinitions>
-                    <Label Content="Warermark text" Grid.Column="0" Grid.Row="0"/>
-                    <TextBox x:Name="textBoxWatermarkText" Text="BIM" Width="150" Grid.Column="0" Grid.Row="1"/>
+                    <Label x:Uid="Label_3" Content="Warermark text" Grid.Column="0" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxWatermarkText" x:Name="textBoxWatermarkText" Text="BIM" Width="150" Grid.Column="0" Grid.Row="1"/>
 
-                    <Button x:Name="buttonFont" Content="Font" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
+                    <Button x:Uid="buttonFont" x:Name="buttonFont" Content="Font" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
 
-                    <Label Content="Watermark size %" Grid.Column="2" Grid.Row="0"/>
-                    <TextBox x:Name="textBoxWatermarkSize" Text="5" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label x:Uid="Label_4" Content="Watermark size %" Grid.Column="2" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxWatermarkSize" x:Name="textBoxWatermarkSize" Text="5" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label Content="Num by X" Grid.Column="3" Grid.Row="0"/>
-                    <TextBox x:Name="textBoxNumX" Text="3" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label x:Uid="Label_5" Content="Num by X" Grid.Column="3" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxNumX" x:Name="textBoxNumX" Text="3" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label Content="Num by Y" Grid.Column="4" Grid.Row="0"/>
-                    <TextBox x:Name="textBoxNumY" Text="2" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label x:Uid="Label_6" Content="Num by Y" Grid.Column="4" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxNumY" x:Name="textBoxNumY" Text="2" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label Content="Angle" Grid.Column="5" Grid.Row="0"/>
-                    <TextBox x:Name="textBoxWatermarkAngle" Text="0" Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label x:Uid="Label_7" Content="Angle" Grid.Column="5" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxWatermarkAngle" x:Name="textBoxWatermarkAngle" Text="0" Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label Content="Opacity" Grid.Column="6" Grid.Row="0"/>
-                    <TextBox x:Name="textBoxWatermarkOpacity" Text="0" Grid.Column="6" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label x:Uid="Label_8" Content="Opacity" Grid.Column="6" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxWatermarkOpacity" x:Name="textBoxWatermarkOpacity" Text="0" Grid.Column="6" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Button x:Name="buttonInsertWatermarks" Content="Insert watermarks" Grid.Column="7" Grid.Row="0" Grid.RowSpan="2" Click="buttonInsertWatermarks_Click"/>
+                    <Button x:Uid="buttonInsertWatermarks" x:Name="buttonInsertWatermarks" Content="Insert watermarks" Grid.Column="7" Grid.Row="0" Grid.RowSpan="2" Click="buttonInsertWatermarks_Click"/>
                     
-                    <Button x:Name="buttonDeleteWatermarks" Content="Delete watermarks" Grid.Column="8" Grid.Row="0" Grid.RowSpan="2" Click="buttonDeleteWatermarks_Click"/>
+                    <Button x:Uid="buttonDeleteWatermarks" x:Name="buttonDeleteWatermarks" Content="Delete watermarks" Grid.Column="8" Grid.Row="0" Grid.RowSpan="2" Click="buttonDeleteWatermarks_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Uid="TabItem_4" Header="Save">
                 <StackPanel x:Uid="StackPanel_2" Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel x:Uid="StackPanel_3" Orientation="Horizontal">
                         <CheckBox x:Uid="checkBoxResizeResults" x:Name="checkBoxResizeResults"  Content="Change result files resolution"/>
-                        <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxResultResolution" HorizontalAlignment="Left" IsEnabled="{Binding IsChecked, ElementName=checkBoxResizeResults}">
+                        <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxResultResolution" HorizontalAlignment="Left" Visibility="{Binding IsChecked, ElementName=checkBoxResizeResults, Converter={StaticResource booltoVis}}">
                             <ComboBoxItem x:Uid="comboBoxItem320" x:Name="comboBoxItem320" Content="320*240"/>
                             <ComboBoxItem x:Uid="comboBoxItem640" x:Name="comboBoxItem640" Content="640*480"/>
                             <ComboBoxItem x:Uid="comboBoxItem1024" x:Name="comboBoxItem1024" Content="1024*768" IsSelected="True"/>
@@ -87,27 +88,27 @@
                 </StackPanel>
             </TabItem>
         </TabControl>
-        <ProgressBar x:Name="progressBar" DockPanel.Dock="Bottom" Height="20"/>
+        <ProgressBar x:Uid="progressBar" x:Name="progressBar" DockPanel.Dock="Bottom" Height="20"/>
         <ListBox x:Uid="listBoxPreview" x:Name="listBoxPreview" Visibility="Collapsed" ScrollViewer.CanContentScroll="False" HorizontalContentAlignment="Stretch"
 			ItemsSource="{DynamicResource previewImages}"
 			ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Width="300" SelectionChanged="listBoxPreview_SelectionChanged">
             <ListBox.Resources>
-                <loc:BitmapImageCollectionForXaml x:Key="previewImages"/>
-                <Style TargetType="{x:Type MenuItem}">
-                    <EventSetter Event="MenuItem.Click" Handler="DeleteSourceImageFromResource"/>
+                <loc:BitmapImageCollectionForXaml x:Uid="loc:BitmapImageCollectionForXaml_1" x:Key="previewImages"/>
+                <Style x:Uid="Style_2" TargetType="{x:Type MenuItem}">
+                    <EventSetter x:Uid="EventSetter_1" Event="MenuItem.Click" Handler="DeleteSourceImageFromResource"/>
                 </Style>
             </ListBox.Resources>
             <ListBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Remove"/>
+                <ContextMenu x:Uid="ContextMenu_1">
+                    <MenuItem x:Uid="MenuItem_1" Header="Remove"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
             <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Image Source="{Binding bitmapImage}"/>
+                <DataTemplate x:Uid="DataTemplate_1">
+                    <Image x:Uid="Image_1" Source="{Binding bitmapImage}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Image x:Name="imagePreview"/>
+        <Image x:Uid="imagePreview" x:Name="imagePreview"/>
     </DockPanel>
 </Window>
