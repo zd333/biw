@@ -33,15 +33,6 @@ namespace Bulk_Image_Watermark
         //source property for preview
         private BitmapSource bitmapForPreview;
 
-        //global current typeface
-        //????????????????????????????????????????
-        //will not need this with adorners
-        Typeface curTypeface = new Typeface("Arial");
-
-        //global current font color
-        //????????????????????????????????????????
-        //will not need this with adorners
-        Brush curFontColor = Brushes.GreenYellow;
 
         public MainWindow()
         {
@@ -199,8 +190,21 @@ namespace Bulk_Image_Watermark
         private void buttonInsertWatermarks_Click(object sender, RoutedEventArgs e)
         {
             //change image and render watermarks
-            //just testing now
-            //????????????????????????????????????????????????
+
+            //get selected font family
+            Typeface f = new Typeface("Arial");
+            try
+            {
+                f = new Typeface(comboBoxFontFamily.SelectedItem.ToString());
+            }
+            catch (Exception)
+            {}
+
+            //get selected color
+            Brush c = new SolidColorBrush(colorPickerFontColor.SelectedColor);
+            
+
+            //set geometrical parameters
             int size, ang, op, x, y;
             size = 5;
             ang = 45;
@@ -208,8 +212,6 @@ namespace Bulk_Image_Watermark
             int.TryParse(textBoxWatermarkSize.Text, out size);
             int.TryParse(textBoxWatermarkAngle.Text, out ang);
             int.TryParse(textBoxWatermarkOpacity.Text, out op);
-            x = 50;
-            y = 50;
 
             int numx = 1;
             int numy = 1;
@@ -225,7 +227,7 @@ namespace Bulk_Image_Watermark
                     x = xi * stepx;
                     y = yi * stepy;
                     double dop =1.0 - op / 100.0;
-                    watermarks.Add(new TextWatermark(textBoxWatermarkText.Text, curTypeface, curFontColor, size, ang, dop, x, y));
+                    watermarks.Add(new TextWatermark(textBoxWatermarkText.Text, f, c , size, ang, dop, x, y));
                 }
 
             renderPreviewImage();

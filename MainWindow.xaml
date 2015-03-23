@@ -2,7 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sysCollection="clr-namespace:System.Collections;assembly=mscorlib"
-        xmlns:loc="clr-namespace:Bulk_Image_Watermark"        
+        xmlns:loc="clr-namespace:Bulk_Image_Watermark"      
+    
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Uid="Window_1" x:Class="Bulk_Image_Watermark.MainWindow"
         
@@ -44,6 +46,7 @@
                         <ColumnDefinition x:Uid="ColumnDefinition_6" Width="Auto"/>
                         <ColumnDefinition x:Uid="ColumnDefinition_7" Width="Auto"/>
                         <ColumnDefinition x:Uid="ColumnDefinition_8" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_9" Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition x:Uid="RowDefinition_1"/>
@@ -53,7 +56,7 @@
                     <TextBox x:Uid="textBoxWatermarkText" x:Name="textBoxWatermarkText" Text="BIM" Width="150" Grid.Column="0" Grid.Row="1"/>
 
                     <Label Content="Font" Grid.Column="1" Grid.Row="0"/>
-                    <ComboBox ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" SelectedItem="{x:Static Fonts.SystemFontFamilies}" Grid.Column="1" Grid.Row="1" SelectedIndex="0">
+                    <ComboBox Name="comboBoxFontFamily" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" SelectedItem="{x:Static Fonts.SystemFontFamilies}" Grid.Column="1" Grid.Row="1" SelectedIndex="0">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Path=Source}" FontFamily="{Binding}"/>
@@ -61,23 +64,28 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <Label x:Uid="Label_4" Content="Size %" Grid.Column="2" Grid.Row="0"/>
-                    <TextBox x:Uid="textBoxWatermarkSize" x:Name="textBoxWatermarkSize" Text="5" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label Content="Color" Grid.Column="2" Grid.Row="0"/>
+                    <xctk:ColorPicker Name="colorPickerFontColor" Grid.Column="2" Grid.Row="1" Width="40">
+                    </xctk:ColorPicker>
 
-                    <Label x:Uid="Label_5" Content="Num by X" Grid.Column="3" Grid.Row="0"/>
-                    <TextBox x:Uid="textBoxNumX" x:Name="textBoxNumX" Text="3" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label x:Uid="Label_6" Content="Num by Y" Grid.Column="4" Grid.Row="0"/>
-                    <TextBox x:Uid="textBoxNumY" x:Name="textBoxNumY" Text="2" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label x:Uid="Label_4" Content="Size %" Grid.Column="3" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxWatermarkSize" x:Name="textBoxWatermarkSize" Text="5" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label x:Uid="Label_7" Content="Angle" Grid.Column="5" Grid.Row="0"/>
-                    <TextBox x:Uid="textBoxWatermarkAngle" x:Name="textBoxWatermarkAngle" Text="45" Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label x:Uid="Label_5" Content="Num by X" Grid.Column="4" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxNumX" x:Name="textBoxNumX" Text="3" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Label x:Uid="Label_8" Content="Opacity %" Grid.Column="6" Grid.Row="0"/>
-                    <TextBox x:Uid="textBoxWatermarkOpacity" x:Name="textBoxWatermarkOpacity" Text="50" Grid.Column="6" Grid.Row="1" HorizontalContentAlignment="Center"/>
+                    <Label x:Uid="Label_6" Content="Num by Y" Grid.Column="5" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxNumY" x:Name="textBoxNumY" Text="2" Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center"/>
 
-                    <Button x:Uid="buttonInsertWatermarks" x:Name="buttonInsertWatermarks" Content="Insert watermarks" Grid.Column="7" Grid.Row="0" Click="buttonInsertWatermarks_Click"/>                    
-                    <Button x:Uid="buttonDeleteWatermarks" x:Name="buttonDeleteWatermarks" Content="Delete watermarks" Grid.Column="7" Grid.Row="1" Click="buttonDeleteWatermarks_Click"/>
+                    <Label x:Uid="Label_7" Content="Angle" Grid.Column="6" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxWatermarkAngle" x:Name="textBoxWatermarkAngle" Text="45" Grid.Column="6" Grid.Row="1" HorizontalContentAlignment="Center"/>
+
+                    <Label x:Uid="Label_8" Content="Opacity %" Grid.Column="7" Grid.Row="0"/>
+                    <TextBox x:Uid="textBoxWatermarkOpacity" x:Name="textBoxWatermarkOpacity" Text="50" Grid.Column="7" Grid.Row="1" HorizontalContentAlignment="Center"/>
+
+                    <Button x:Uid="buttonInsertWatermarks" x:Name="buttonInsertWatermarks" Content="Insert watermarks" Grid.Column="8" Grid.Row="0" Click="buttonInsertWatermarks_Click"/>                    
+                    <Button x:Uid="buttonDeleteWatermarks" x:Name="buttonDeleteWatermarks" Content="Delete watermarks" Grid.Column="8" Grid.Row="1" Click="buttonDeleteWatermarks_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Uid="TabItem_4" Header="Save">
