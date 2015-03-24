@@ -12,41 +12,47 @@ namespace Bulk_Image_Watermark
     { jpg, png, bmp}
     static class Watermarking
     {
-        public static bool WatermarkBitmapImageAndSaveToFile(ImageFiletypes fileFormat, BitmapImage sourceImage, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
+        public static bool WatermarkScaleAndSaveImageFromBitmapImage(ImageFiletypes fileFormat, BitmapImage sourceImage, int newPixelWidth, int newPixelHight, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
         {
-            RenderTargetBitmap rtb = CreateWatermarkedBitmapEncoder(sourceImage, watermarks);
+            RenderTargetBitmap rtb = CreateWatermarkedBitmapEncoder(sourceImage, watermarks, newPixelWidth, newPixelHight);            
             return SaveImage(rtb, fileFormat, saveDirectoryPath, fileNameWithoutExtensionAndPath);
         }
-        public static bool WatermarkImageFromFileAndSaveToFile(ImageFiletypes fileFormat, string path, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
+
+        public static bool WatermarkScaleAndSaveImageFromFile(ImageFiletypes fileFormat, string path, int newPixelWidth, int newPixelHight, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
         {
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
             bi.UriSource = new Uri(path);
             bi.EndInit();
-            return WatermarkBitmapImageAndSaveToFile(fileFormat, bi, watermarks, saveDirectoryPath, fileNameWithoutExtensionAndPath);            
+            return WatermarkScaleAndSaveImageFromBitmapImage(fileFormat, bi, newPixelWidth, newPixelHight, watermarks, saveDirectoryPath, fileNameWithoutExtensionAndPath);            
         }
 
         public static BitmapSource GetImageFromBitmapImageForUi(BitmapImage sourceImage, List<Watermark> watermarks)
         {
             //????????????????????????????????????????????????????????
             //with adorners this method will become not necessary
-            RenderTargetBitmap rtb = CreateWatermarkedBitmapEncoder(sourceImage, watermarks);
-
+            RenderTargetBitmap rtb = CreateWatermarkedBitmapEncoder(sourceImage, watermarks, sourceImage.PixelWidth,sourceImage.PixelHeight);
             return rtb;
         }
 
-        public static BitmapSource GetImageFromFileForUi(string path, List<Watermark> watermarks)
-        {
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new Uri(path);
-            bi.EndInit();
-            return GetImageFromBitmapImageForUi(bi, watermarks);
-        }
+        //public static BitmapSource GetImageFromFileForUi(string path, List<Watermark> watermarks)
+        //{
+        //    BitmapImage bi = new BitmapImage();
+        //    bi.BeginInit();
+        //    bi.UriSource = new Uri(path);
+        //    bi.EndInit();
+        //    return GetImageFromBitmapImageForUi(bi, watermarks);
+        //}
 
-        private static RenderTargetBitmap CreateWatermarkedBitmapEncoder(BitmapImage SourceImage, List<Watermark> Watermarks)
+        private static RenderTargetBitmap CreateWatermarkedBitmapEncoder(BitmapImage SourceImage, List<Watermark> Watermarks, int newPixelWidth, int newPixelHeight)
         {            
             DrawingVisual visual = new DrawingVisual();
+            
+            //resize koefficient
+            double kw = 1;
+            if (SourceImage.PixelWidth > 0) kw = (double)newPixelWidth / SourceImage.PixelWidth;
+            double kh = 1;
+            if (SourceImage.PixelHeight > 0) kh = (double)newPixelHeight / SourceImage.PixelHeight;
 
             using (DrawingContext dc = visual.RenderOpen())
             {
@@ -81,7 +87,10 @@ namespace Bulk_Image_Watermark
                 }
             }
 
-            RenderTargetBitmap rtb = new RenderTargetBitmap(SourceImage.PixelWidth, SourceImage.PixelHeight, 96, 96, PixelFormats.Pbgra32);
+            //resize transform
+            visual.Transform = new ScaleTransform(kw, kh);
+
+            RenderTargetBitmap rtb = new RenderTargetBitmap(newPixelWidth, newPixelHeight, 96, 96, PixelFormats.Pbgra32);
             rtb.Render(visual);
 
             return rtb;
@@ -117,7 +126,7 @@ namespace Bulk_Image_Watermark
                     ext = ".png";
             try
             {
-                using (Stream stm = File.Create(SaveDirectoryPath + FileNameWithoutExtensionAndPath + ext))
+                using (Stream stm = File.Create(SaveDirectoryPath + "\\" + FileNameWithoutExtensionAndPath + ext))
                 {
                     be.Save(stm);
                 }

@@ -65,6 +65,8 @@ namespace Bulk_Image_Watermark
 
             //??????????????????????????????????????
             //image processing and saving
+            string s = sourceContainer.images[0].imageFileDirectoryRelativeToBaseDirectoryPath + sourceContainer.images[0].imageFileNameWithoutPathAndExtension;
+            Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(ImageFiletypes.jpg, sourceContainer.images[0].bitmapImage, 1000, 1000, watermarks, savePath, s);
         }
 
 

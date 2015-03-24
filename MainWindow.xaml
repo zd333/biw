@@ -91,7 +91,7 @@
             <TabItem x:Uid="TabItem_4" Header="Save">
                 <StackPanel x:Uid="StackPanel_2" Orientation="Vertical">
                     <StackPanel x:Uid="StackPanel_3" Orientation="Horizontal">
-                        <CheckBox x:Uid="checkBoxResizeResults" x:Name="checkBoxResizeResults"  Content="Change result files resolution"/>
+                        <CheckBox x:Uid="checkBoxResizeResults" x:Name="checkBoxResizeResults"  Content="Change result files pixel dimensions"/>
                         <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxResultResolution" HorizontalAlignment="Left" Visibility="{Binding IsChecked, ElementName=checkBoxResizeResults, Converter={StaticResource booltoVis}}">
                             <ComboBoxItem x:Uid="comboBoxItem320" x:Name="comboBoxItem320" Content="320*240"/>
                             <ComboBoxItem x:Uid="comboBoxItem640" x:Name="comboBoxItem640" Content="640*480"/>
