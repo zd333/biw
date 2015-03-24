@@ -51,6 +51,17 @@ namespace Bulk_Image_Watermark
                 ShowMessageBoxFromResourceDictionary("warningNoResultsToSave", "warning", MessageBoxImage.Error);
                 return;
             }
+            if (sourceContainer.images.Count == 0)
+            {
+                ShowMessageBoxFromResourceDictionary("warningNoResultsToSave", "warning", MessageBoxImage.Error);
+                return;
+            }
+
+            if ((watermarks.Count == 0) && (checkBoxDontLoadAllSourceImagesToMemory.IsChecked == true))
+            {
+                ShowMessageBoxFromResourceDictionary("warningNothingToProcess", "warning", MessageBoxImage.Error);
+                return;                
+            }
             string savePath = textBoxDestinationPath.Text;
             if (savePath.Length == 0)
             {
@@ -63,10 +74,72 @@ namespace Bulk_Image_Watermark
                 return;
             }
 
+            //prepare resize dimensions if they are necessary in next processing
+            //1024*768 will be default values if validation not passed
+            int width = 1024;
+            int height = 768;
+            try
+            {                
+                string[] s;
+                //if (comboBoxResultResolution.SelectedValue.GetType() == typeof(ComboBoxItem))
+                if (comboBoxResultResolution.SelectedItem != null)
+                {
+                    ComboBoxItem c = (ComboBoxItem)comboBoxResultResolution.SelectedItem;
+                    s = c.Content.ToString().Split('*');
+                }
+                else
+                    s = comboBoxResultResolution.Text.ToString().Split('*');
+                
+                width = int.Parse(s[0]);
+                height = int.Parse(s[1]);
+            }
+            catch (Exception ex)
+            {
+            }
+            if (height > width)
+            {
+                int t = width;
+                width = height;
+                height = t;
+            }
+
+
             //??????????????????????????????????????
             //image processing and saving
-            string s = sourceContainer.images[0].imageFileDirectoryRelativeToBaseDirectoryPath + sourceContainer.images[0].imageFileNameWithoutPathAndExtension;
-            Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(ImageFiletypes.jpg, sourceContainer.images[0].bitmapImage, 1000, 1000, watermarks, savePath, s);
+            //need parallelism here
+            foreach (ImageFromFile im in sourceContainer.images)
+            {
+                string s =savePath + im.imageFileDirectoryRelativeToBaseDirectoryPath;
+
+                //add image file format conversion here
+                //???????????????????????????????????????????
+
+                if (im.bitmapImage == null)
+                {
+                    //need to use file path as source
+                    Watermarking.WatermarkAndSaveImageFromFile(im.imageFileType,im.imageFileFullPath, watermarks,s,im.imageFileNameWithoutPathAndExtension);
+                }
+                else
+                {
+                    //bitmap is in memory, use it for processing instead of files
+                    //can process resizing if necessary
+                    if (checkBoxResizeResults.IsChecked == false)
+                    {
+                        //no resizing
+                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, im.bitmapImage, im.bitmapImage.PixelWidth, im.bitmapImage.PixelHeight, watermarks, s, im.imageFileNameWithoutPathAndExtension);
+                    }
+                    else
+                    {
+                        //resize
+                        //???????????????????????????????????????
+                        //to add - scaling/cutting option for images with proportions not equal to resize proportions?
+                        if (im.bitmapImage.PixelWidth > im.bitmapImage.PixelHeight)
+                            Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, im.bitmapImage, width, height, watermarks, s, im.imageFileNameWithoutPathAndExtension);
+                        else
+                            Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, im.bitmapImage, height, width, watermarks, s, im.imageFileNameWithoutPathAndExtension);
+                    }
+                }
+            }
         }
 
 
@@ -109,9 +182,10 @@ namespace Bulk_Image_Watermark
 
         private void LoadSourceImagesToContainer()
         {
-            //disable controls that can start this method
+            
             //??????????????????????????????????????????????????
-            //add cancelation and restart mechanism instead of disabling
+            //disable controls that can start this method
+            //add process to new thread, cancelation and restart mechanism instead of disabling
             buttonLoadSourceImages.IsEnabled = false;
             checkBoxDontLoadAllSourceImagesToMemory.IsEnabled = false;
 
@@ -121,6 +195,9 @@ namespace Bulk_Image_Watermark
 
             listBoxPreview.Resources["previewImages"] = sourceContainer.images;
 
+            //??????????????????????????????????????????????????
+            //enable controls that can start this method
+            //add process to new thread, cancelation and restart mechanism instead of disabling
             buttonLoadSourceImages.IsEnabled = true;
             checkBoxDontLoadAllSourceImagesToMemory.IsEnabled = true;
             
@@ -264,6 +341,13 @@ namespace Bulk_Image_Watermark
             //remove all watermarks and rewrite image
             watermarks.Clear();
             renderPreviewImage();
+        }
+
+        private void checkBoxDontLoadAllSourceImagesToMemory_Checked(object sender, RoutedEventArgs e)
+        {
+            //reset resize checkbox
+            //cant use binding because only checking (not unchecking) must affect target checkbox
+            checkBoxResizeResults.IsChecked = false;
         }
     }    
 }

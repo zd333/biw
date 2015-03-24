@@ -13,7 +13,7 @@
         <Style x:Uid="Style_1" TargetType="{x:Type Button}">
             <Setter x:Uid="Setter_1" Property="BorderBrush" Value="Green"/>
         </Style>
-        <BooleanToVisibilityConverter x:Uid="BooleanToVisibilityConverter_1" x:Key="booltoVis"/>
+        <loc:InverseOneWayBooleanConverter x:Key="invBool"/>
     </Window.Resources>
 
     <DockPanel x:Uid="DockPanel_1" LastChildFill="True">
@@ -27,7 +27,7 @@
                         <TextBox x:Uid="textBoxSourcePath" x:Name="textBoxSourcePath"/>
                     </DockPanel>
                     <CheckBox x:Uid="checkBoxUseSubdirectories" x:Name="checkBoxUseSubdirectories" IsChecked="True" Content="Process files in subdirectories"/>
-                    <CheckBox x:Uid="checkBoxDontLoadAllSourceImagesToMemory" x:Name="checkBoxDontLoadAllSourceImagesToMemory" IsChecked="False" Content="Do not load source images for prevew (use to speed up)" Click="checkBoxDontLoadAllSourceImagesToMemory_Click"/>
+                    <CheckBox x:Uid="checkBoxDontLoadAllSourceImagesToMemory" x:Name="checkBoxDontLoadAllSourceImagesToMemory" IsChecked="False" Content="Do not load source images for prevew (use to speed up)" Click="checkBoxDontLoadAllSourceImagesToMemory_Click" Checked="checkBoxDontLoadAllSourceImagesToMemory_Checked"/>
                     <DockPanel x:Uid="DockPanel_3" LastChildFill="True">
                         <Label x:Uid="Label_2" Content="Destination path" DockPanel.Dock="Left"/>
                         <Button x:Uid="buttonSelectDestinationPath" x:Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectDestinationPath_Click"/>
@@ -91,8 +91,10 @@
             <TabItem x:Uid="TabItem_4" Header="Save">
                 <StackPanel x:Uid="StackPanel_2" Orientation="Vertical">
                     <StackPanel x:Uid="StackPanel_3" Orientation="Horizontal">
-                        <CheckBox x:Uid="checkBoxResizeResults" x:Name="checkBoxResizeResults"  Content="Change result files pixel dimensions"/>
-                        <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxResultResolution" HorizontalAlignment="Left" Visibility="{Binding IsChecked, ElementName=checkBoxResizeResults, Converter={StaticResource booltoVis}}">
+                        <CheckBox x:Uid="checkBoxResizeResults" x:Name="checkBoxResizeResults"  Content="Change result files pixel dimensions"
+                                  IsEnabled="{Binding ElementName=checkBoxDontLoadAllSourceImagesToMemory, Path=IsChecked, Converter={StaticResource invBool}}"/>
+                        <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxResultResolution" HorizontalAlignment="Left" IsEditable="True"
+                                  IsEnabled="{Binding ElementName=checkBoxResizeResults, Path=IsEnabled}">
                             <ComboBoxItem x:Uid="comboBoxItem320" x:Name="comboBoxItem320" Content="320*240"/>
                             <ComboBoxItem x:Uid="comboBoxItem640" x:Name="comboBoxItem640" Content="640*480"/>
                             <ComboBoxItem x:Uid="comboBoxItem1024" x:Name="comboBoxItem1024" Content="1024*768" IsSelected="True"/>

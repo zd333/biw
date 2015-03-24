@@ -5,5 +5,6 @@
     <system:String x:Uid="system:String_1" x:Key="warning">Warning</system:String>
     <system:String x:Uid="system:String_2" x:Key="warningNoDestinationPath">Destination folder not selected!</system:String>
     <system:String x:Uid="system:String_3" x:Key="warningDestinationSourcePathesTheSame">Source and destination folders are the same!</system:String>
-    <system:String x:Uid="system:String_4" x:Key="warningNoResultsToSave">There is nothing processed!</system:String>
+    <system:String x:Uid="system:String_4" x:Key="warningNoResultsToSave">There is no images to precess!</system:String>
+    <system:String x:Key="warningNothingToProcess">There is no actions to process with images!</system:String>
 </ResourceDictionary>

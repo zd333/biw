@@ -18,13 +18,13 @@ namespace Bulk_Image_Watermark
             return SaveImage(rtb, fileFormat, saveDirectoryPath, fileNameWithoutExtensionAndPath);
         }
 
-        public static bool WatermarkScaleAndSaveImageFromFile(ImageFiletypes fileFormat, string path, int newPixelWidth, int newPixelHight, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
+        public static bool WatermarkAndSaveImageFromFile(ImageFiletypes fileFormat, string path, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
         {
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
             bi.UriSource = new Uri(path);
             bi.EndInit();
-            return WatermarkScaleAndSaveImageFromBitmapImage(fileFormat, bi, newPixelWidth, newPixelHight, watermarks, saveDirectoryPath, fileNameWithoutExtensionAndPath);            
+            return WatermarkScaleAndSaveImageFromBitmapImage(fileFormat, bi, bi.PixelWidth, bi.PixelHeight, watermarks, saveDirectoryPath, fileNameWithoutExtensionAndPath);            
         }
 
         public static BitmapSource GetImageFromBitmapImageForUi(BitmapImage sourceImage, List<Watermark> watermarks)
@@ -126,6 +126,13 @@ namespace Bulk_Image_Watermark
                     ext = ".png";
             try
             {
+                //check derectory exists
+                if (!Directory.Exists(SaveDirectoryPath))
+                {
+                    Directory.CreateDirectory(SaveDirectoryPath);
+                }
+
+                //write file to directory
                 using (Stream stm = File.Create(SaveDirectoryPath + "\\" + FileNameWithoutExtensionAndPath + ext))
                 {
                     be.Save(stm);

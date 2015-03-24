@@ -102,7 +102,7 @@ namespace Bulk_Image_Watermark
 
     public class ImageFromFile
     {
-        public string imageFileDirectoryFullPath
+        public string imageFileFullPath
         { get; private set; }
 
         public string imageFileDirectoryRelativeToBaseDirectoryPath
@@ -118,7 +118,7 @@ namespace Bulk_Image_Watermark
 
         public ImageFromFile(string directoryFullPath, string directoryRelativeToBaseDirectoryPath, string nameWithoutPathAndExtension, ImageFiletypes type, BitmapImage image)
         {
-            imageFileDirectoryFullPath = directoryFullPath;
+            imageFileFullPath = directoryFullPath;
             imageFileDirectoryRelativeToBaseDirectoryPath = directoryRelativeToBaseDirectoryPath;
             imageFileNameWithoutPathAndExtension = nameWithoutPathAndExtension;
             imageFileType = type;
