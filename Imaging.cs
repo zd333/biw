@@ -40,7 +40,6 @@ namespace Bulk_Image_Watermark
 
         private static void ProcessFile(ref BitmapImageCollectionForXaml images, string filePath, string baseDirectoryPath)
         {
-            System.Threading.Thread.Sleep(5000);
             try
             {
                 string ext = Path.GetExtension(filePath).ToLower();
@@ -58,13 +57,11 @@ namespace Bulk_Image_Watermark
                     case ".bmp":
                         ft = ImageFiletypes.bmp;
                         break;
-
                     default:
                         return;
                 }
 
                 string fnwe = Path.GetFileNameWithoutExtension(filePath);
-
                 string s = Path.GetDirectoryName(filePath);
                 string rp = s.Remove(s.IndexOf(baseDirectoryPath), baseDirectoryPath.Length);
 
@@ -74,8 +71,8 @@ namespace Bulk_Image_Watermark
                 bi.DecodePixelWidth = 200;
                 bi.CacheOption = BitmapCacheOption.OnLoad;
                 bi.UriSource = new Uri(filePath);
-                bi.EndInit();                
-                //this is for wpf control be able to bind bitmapimage, created in different thread
+                bi.EndInit();
+                //this is for usage in another thread
                 bi.Freeze();
 
                 images.Add(new ImageFromFile(filePath, rp, fnwe, ft, bi));

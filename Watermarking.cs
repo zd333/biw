@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace Bulk_Image_Watermark
 {
@@ -66,8 +67,13 @@ namespace Bulk_Image_Watermark
                     if (t == typeof(TextWatermark))
                     {
                         TextWatermark tw = (TextWatermark)w;
-                        dc.DrawText(tw.GetFormattedText(SourceImage.PixelWidth, SourceImage.PixelHeight),
-                            new Point(tw.GetPixelXlocation(SourceImage.PixelWidth), tw.GetPixelYlocation(SourceImage.PixelHeight))); 
+                        //Dispatcher.CurrentDispatcher.Invoke(new Action(() =>
+                        //{
+                        //    dc.DrawText(tw.GetFormattedText(SourceImage.PixelWidth, SourceImage.PixelHeight), new Point(tw.GetPixelXlocation(SourceImage.PixelWidth), tw.GetPixelYlocation(SourceImage.PixelHeight)));
+                        //}));
+
+                        dc.DrawText(tw.GetFormattedText(SourceImage.PixelWidth, SourceImage.PixelHeight), new Point(tw.GetPixelXlocation(SourceImage.PixelWidth), tw.GetPixelYlocation(SourceImage.PixelHeight)));
+
                     }
                     else
                         if (t == typeof(ImageWatermark))

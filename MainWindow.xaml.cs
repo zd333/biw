@@ -95,11 +95,10 @@ namespace Bulk_Image_Watermark
                 height = t;
             }
 
-
-            //??????????????????????????????????????
             //image processing and saving
-            //need parallelism here
-            foreach (ImageFromFile im in images)
+            //use additional flag to avoid access to checkbox from additional threads
+            bool needResize = checkBoxResizeResults.IsChecked.GetValueOrDefault();
+            Parallel.ForEach(images,im =>
             {
                 string s = savePath + im.imageFileDirectoryRelativePath;
 
@@ -108,9 +107,11 @@ namespace Bulk_Image_Watermark
 
                 BitmapImage bi = new BitmapImage();
                 bi.BeginInit();
+                bi.CacheOption = BitmapCacheOption.OnLoad;
                 bi.UriSource = new Uri(im.imageFileFullPath);
                 bi.EndInit();
-                if (checkBoxResizeResults.IsChecked == false)
+                
+                if (!needResize)
                 {
                     //no resizing
                     Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, bi, bi.PixelWidth, bi.PixelHeight, watermarks, s, im.imageFileNameWithoutPathAndExtension);
@@ -126,6 +127,7 @@ namespace Bulk_Image_Watermark
                         Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, bi, height, width, watermarks, s, im.imageFileNameWithoutPathAndExtension);
                 }
             }
+            );
         }
 
 

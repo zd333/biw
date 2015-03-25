@@ -113,6 +113,8 @@ namespace Bulk_Image_Watermark
             text = Text;
             typeface = Font;
             foreground = Foreground;
+            //this is for usage in another thread
+            Foreground.Freeze();
         }
 
         public FormattedText GetFormattedText(int recipientImageWidth, int recipientImageHeight)

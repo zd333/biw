@@ -96,6 +96,11 @@
                             <ComboBoxItem x:Uid="comboBoxItem1024" x:Name="comboBoxItem1024" Content="1024*768" IsSelected="True"/>
                         </ComboBox>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="checkBoxChangeFormat"  Content="Change result files format"/>                        
+                        <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxFileType" HorizontalAlignment="Left">
+                        </ComboBox>
+                    </StackPanel>
                     <Button x:Uid="buttonSave" x:Name="buttonSave" Content="Add watermarks and save files" HorizontalAlignment="Left" Click="buttonSave_Click"/>
                 </StackPanel>
             </TabItem>
