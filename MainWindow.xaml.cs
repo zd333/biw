@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Collections.Specialized;
 using System.Windows.Media.Animation;
+using System.Threading;
 
 
 namespace Bulk_Image_Watermark
@@ -34,7 +35,6 @@ namespace Bulk_Image_Watermark
 
         //source property for preview
         private BitmapSource bitmapForPreview;
-
 
         public MainWindow()
         {
@@ -66,6 +66,11 @@ namespace Bulk_Image_Watermark
                 return;
             }
 
+            //disable controls to avoid parallel invoke or processing data update
+            buttonLoadSourceImages.IsEnabled = false;
+            buttonSave.IsEnabled = false;
+            labelMessage.Content = (string)Application.Current.FindResource("processingImagesMessage");
+
             //prepare resize dimensions if they are necessary in next processing
             //1024*768 will be default values if validation not passed
             int width = 1024;
@@ -73,7 +78,6 @@ namespace Bulk_Image_Watermark
             try
             {                
                 string[] s;
-                //if (comboBoxResultResolution.SelectedValue.GetType() == typeof(ComboBoxItem))
                 if (comboBoxResultResolution.SelectedItem != null)
                 {
                     ComboBoxItem c = (ComboBoxItem)comboBoxResultResolution.SelectedItem;
@@ -114,16 +118,36 @@ namespace Bulk_Image_Watermark
                 }
             }
 
-            //image processing and saving
-            //use additional flag to avoid access to checkbox from additional threads
-            bool needResize = checkBoxResizeResults.IsChecked.GetValueOrDefault();
-            bool needConvert = checkBoxChangeFormat.IsChecked.GetValueOrDefault();
-            Parallel.ForEach(images,im =>
-            {
-                string s = savePath + im.imageFileDirectoryRelativePath;
+            progressBar.Maximum = images.Count;
+            progressBar.Value = 0;
 
-                //add image file format conversion here
-                //???????????????????????????????????????????
+            //start processing and saving in other thread to avoid UI lock
+            Thread th = new Thread(new ParameterizedThreadStart(ProcessAndSaveResults));
+            th.Start(new ProcessAndSaveResultsParams(checkBoxResizeResults.IsChecked.GetValueOrDefault(), width, height,
+                checkBoxChangeFormat.IsChecked.GetValueOrDefault(),iType, savePath));
+        }
+
+        private class ProcessAndSaveResultsParams
+            //params for parametrized thread invoke
+        {
+            public bool needResize; public int width; public int height; public bool needConvert; public ImageFiletypes iType; public string savePath;
+            public ProcessAndSaveResultsParams(bool NeedResize, int Width, int Height, bool NeedConvert, ImageFiletypes IType, string SavePath)
+            {
+                needResize = NeedResize; width = Width; height = Height; needConvert = NeedConvert; iType = IType; savePath = SavePath;
+            }
+        }
+        private void ProcessAndSaveResults(object parameters)
+        {
+            //image processing result counters;
+            int numOk = 0;
+            int numFail = 0;
+
+            if (parameters.GetType() != typeof(ProcessAndSaveResultsParams)) return;//do not throw exception, just do nothing
+
+            ProcessAndSaveResultsParams p = (ProcessAndSaveResultsParams)parameters;
+            Parallel.ForEach(images, im =>
+            {
+                string s = p.savePath + im.imageFileDirectoryRelativePath;
 
                 BitmapImage bi = new BitmapImage();
                 bi.BeginInit();
@@ -131,25 +155,48 @@ namespace Bulk_Image_Watermark
                 bi.UriSource = new Uri(im.imageFileFullPath);
                 bi.EndInit();
 
-                if (!needConvert) iType = im.imageFileType;
-                
-                if (!needResize)
-                {
-                    //no resizing
-                    Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(iType, bi, bi.PixelWidth, bi.PixelHeight, watermarks, s, im.imageFileNameWithoutPathAndExtension);
-                }
+                ImageFiletypes curType = p.iType;
+                if (!p.needConvert) curType = im.imageFileType;
+
+                int pw = bi.PixelWidth;
+                int ph = bi.PixelHeight;
+                if (p.needResize)
+                    if (bi.PixelWidth < bi.PixelHeight)
+                    {
+                        int tmp = pw;
+                        pw = ph;
+                        ph = tmp;
+                    }
+
+                if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, watermarks, s, im.imageFileNameWithoutPathAndExtension))
+                    Interlocked.Increment(ref numOk);
                 else
+                    Interlocked.Increment(ref numFail);
+
+                //update progress bar
+                this.Dispatcher.Invoke(new Action(() =>
                 {
-                    //resize
-                    //???????????????????????????????????????
-                    //to add - scaling/cutting option for images with proportions not equal to resize proportions?
-                    if (bi.PixelWidth > bi.PixelHeight)
-                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(iType, bi, width, height, watermarks, s, im.imageFileNameWithoutPathAndExtension);
-                    else
-                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(iType, bi, height, width, watermarks, s, im.imageFileNameWithoutPathAndExtension);
-                }
+                    //multithread safe increment
+                    lock (progressBar)
+                    { progressBar.Value++; }
+                }));
             }
-            );
+            );  
+          
+            //enable controls and write message
+            buttonLoadSourceImages.Dispatcher.Invoke(new Action (() => {
+                buttonLoadSourceImages.IsEnabled = true;
+            }));
+            buttonSave.Dispatcher.Invoke(new Action(() =>
+            {
+                buttonSave.IsEnabled = true;
+            }));
+            labelMessage.Dispatcher.Invoke(new Action(() =>
+            {
+                //??????????????????????????????????????????
+                labelMessage.Content = numOk.ToString() + " " + (string)Application.Current.FindResource("okProcessedImagesMessage");
+                labelMessage.Content += ", " + numFail.ToString() + " " + (string)Application.Current.FindResource("failProcessedImagesMessage");
+            }));
         }
 
 
@@ -200,7 +247,6 @@ namespace Bulk_Image_Watermark
             labelMessage.Content = (string)Application.Current.FindResource("loadingImagesMessage");
 
             //start progress bar animation
-            progressBar.Minimum = 0;
             progressBar.Maximum = 100;
             progressBar.IsIndeterminate = true;
 

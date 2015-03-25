@@ -40,6 +40,7 @@ namespace Bulk_Image_Watermark
 
         private static void ProcessFile(ref BitmapImageCollectionForXaml images, string filePath, string baseDirectoryPath)
         {
+            //System.Threading.Thread.Sleep(2000);
             try
             {
                 string ext = Path.GetExtension(filePath).ToLower();
