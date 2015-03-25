@@ -15,6 +15,7 @@ using System.IO;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Collections.Specialized;
+using System.Windows.Media.Animation;
 
 
 namespace Bulk_Image_Watermark
@@ -57,11 +58,6 @@ namespace Bulk_Image_Watermark
                 return;
             }
 
-            if ((watermarks.Count == 0) && (checkBoxDontLoadAllSourceImagesToMemory.IsChecked == true))
-            {
-                ShowMessageBoxFromResourceDictionary("warningNothingToProcess", "warning", MessageBoxImage.Error);
-                return;                
-            }
             string savePath = textBoxDestinationPath.Text;
             if (savePath.Length == 0)
             {
@@ -93,7 +89,7 @@ namespace Bulk_Image_Watermark
                 width = int.Parse(s[0]);
                 height = int.Parse(s[1]);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             if (height > width)
@@ -109,35 +105,29 @@ namespace Bulk_Image_Watermark
             //need parallelism here
             foreach (ImageFromFile im in sourceContainer.images)
             {
-                string s =savePath + im.imageFileDirectoryRelativeToBaseDirectoryPath;
+                string s = savePath + im.imageFileDirectoryRelativeToBaseDirectoryPath;
 
                 //add image file format conversion here
                 //???????????????????????????????????????????
 
-                if (im.bitmapImage == null)
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
+                bi.UriSource = new Uri(im.imageFileFullPath);
+                bi.EndInit();
+                if (checkBoxResizeResults.IsChecked == false)
                 {
-                    //need to use file path as source
-                    Watermarking.WatermarkAndSaveImageFromFile(im.imageFileType,im.imageFileFullPath, watermarks,s,im.imageFileNameWithoutPathAndExtension);
+                    //no resizing
+                    Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, bi, bi.PixelWidth, bi.PixelHeight, watermarks, s, im.imageFileNameWithoutPathAndExtension);
                 }
                 else
                 {
-                    //bitmap is in memory, use it for processing instead of files
-                    //can process resizing if necessary
-                    if (checkBoxResizeResults.IsChecked == false)
-                    {
-                        //no resizing
-                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, im.bitmapImage, im.bitmapImage.PixelWidth, im.bitmapImage.PixelHeight, watermarks, s, im.imageFileNameWithoutPathAndExtension);
-                    }
+                    //resize
+                    //???????????????????????????????????????
+                    //to add - scaling/cutting option for images with proportions not equal to resize proportions?
+                    if (bi.PixelWidth > bi.PixelHeight)
+                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, bi, width, height, watermarks, s, im.imageFileNameWithoutPathAndExtension);
                     else
-                    {
-                        //resize
-                        //???????????????????????????????????????
-                        //to add - scaling/cutting option for images with proportions not equal to resize proportions?
-                        if (im.bitmapImage.PixelWidth > im.bitmapImage.PixelHeight)
-                            Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, im.bitmapImage, width, height, watermarks, s, im.imageFileNameWithoutPathAndExtension);
-                        else
-                            Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, im.bitmapImage, height, width, watermarks, s, im.imageFileNameWithoutPathAndExtension);
-                    }
+                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, bi, height, width, watermarks, s, im.imageFileNameWithoutPathAndExtension);
                 }
             }
         }
@@ -187,26 +177,24 @@ namespace Bulk_Image_Watermark
             //disable controls that can start this method
             //add process to new thread, cancelation and restart mechanism instead of disabling
             buttonLoadSourceImages.IsEnabled = false;
-            checkBoxDontLoadAllSourceImagesToMemory.IsEnabled = false;
+
+            Duration duration = new Duration(TimeSpan.FromSeconds(20));
+            DoubleAnimation doubleanimation = new DoubleAnimation(200.0, duration);
+            progressBar.BeginAnimation(ProgressBar.ValueProperty, doubleanimation);
 
             sourceContainer = new SourceBitmapImagesContainer(textBoxSourcePath.Text,
-                checkBoxUseSubdirectories.IsChecked.GetValueOrDefault(),
-                !checkBoxDontLoadAllSourceImagesToMemory.IsChecked.GetValueOrDefault());
+                checkBoxUseSubdirectories.IsChecked.GetValueOrDefault());
 
             listBoxPreview.Resources["previewImages"] = sourceContainer.images;
+
+            labelMessage.Content = sourceContainer.images.Count.ToString() + " " + (string)Application.Current.FindResource("loadedImagesQuantityMessage");
 
             //??????????????????????????????????????????????????
             //enable controls that can start this method
             //add process to new thread, cancelation and restart mechanism instead of disabling
             buttonLoadSourceImages.IsEnabled = true;
-            checkBoxDontLoadAllSourceImagesToMemory.IsEnabled = true;
             
             renderPreviewImage();
-        }
-
-        private void checkBoxDontLoadAllSourceImagesToMemory_Click(object sender, RoutedEventArgs e)
-        {
-            LoadSourceImagesToContainer();
         }
 
         //preview listbox context menu remove pressed handler
@@ -232,39 +220,38 @@ namespace Bulk_Image_Watermark
         private void renderPreviewImage()
         {
             //put image on preview panel
-            BitmapImage tbi = new BitmapImage();
+            
             if (sourceContainer != null)
-                if ((sourceContainer.images.Count == 0) || (checkBoxDontLoadAllSourceImagesToMemory.IsChecked == true))
+                if (sourceContainer.images.Count == 0)
                 {
-                    //no images selected or user admited not to load images to memory
-                    tbi = GetResourcesPlaceholderMemoryClone();
+                    //no images loaded
+                    bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(GetResourcesPlaceholder(), watermarks);
                 }
                 else
                     if (listBoxPreview.SelectedItem != null)
-                        tbi = ((ImageFromFile)listBoxPreview.SelectedItem).bitmapImage.CloneCurrentValue();
+                        //tbi = ((ImageFromFile)listBoxPreview.SelectedItem).bitmapImage;
+                        bitmapForPreview = Watermarking.GetImageFromFileForUi(((ImageFromFile)listBoxPreview.SelectedItem).imageFileFullPath, watermarks);
                     else
-                        tbi = sourceContainer.images[0].bitmapImage.CloneCurrentValue();
+                        //bitmapForPreview = sourceContainer.images[0].bitmapImage;
+                        bitmapForPreview = Watermarking.GetImageFromFileForUi(sourceContainer.images[0].imageFileFullPath, watermarks);
             else
                 //no images selected
-                tbi = GetResourcesPlaceholderMemoryClone();
+                bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(GetResourcesPlaceholder(), watermarks);
 
-            //???????????????????????????????
-            //this part of method will be not necessary with adorners
-            
-            //create watermarks and place them on preview image
-            bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(tbi,watermarks);
             ImageSource isrc = bitmapForPreview;
             imagePreview.Source = isrc;
         }
 
-        private BitmapImage GetResourcesPlaceholderMemoryClone()
+        private BitmapImage GetResourcesPlaceholder()
         {
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
             bi.UriSource = new Uri("pack://application:,,,/Binary resources/placeholder.jpg");
             bi.EndInit();
-            return bi.CloneCurrentValue();
+            return bi;
         }
+
+
 
         private void buttonInsertWatermarks_Click(object sender, RoutedEventArgs e)
         {
@@ -319,8 +306,8 @@ namespace Bulk_Image_Watermark
             {
                 ItemCollection l = (ItemCollection)sender;
                 if (l != null)
-                    //there is no items in listbox or user admited not to load source images to memory
-                    if ((l.Count > 0) && (checkBoxDontLoadAllSourceImagesToMemory.IsChecked == false))
+                    //there is some items in listbox
+                    if (l.Count > 0)
                     {
                         listBoxPreview.Visibility = Visibility.Visible;
                         return;
@@ -341,13 +328,6 @@ namespace Bulk_Image_Watermark
             //remove all watermarks and rewrite image
             watermarks.Clear();
             renderPreviewImage();
-        }
-
-        private void checkBoxDontLoadAllSourceImagesToMemory_Checked(object sender, RoutedEventArgs e)
-        {
-            //reset resize checkbox
-            //cant use binding because only checking (not unchecking) must affect target checkbox
-            checkBoxResizeResults.IsChecked = false;
         }
     }    
 }

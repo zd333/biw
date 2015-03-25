@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Bulk_Image_Watermark
@@ -21,13 +22,10 @@ namespace Bulk_Image_Watermark
         public BitmapImageCollectionForXaml images
         { get; set; }
 
-        private bool _keepSourceFilesInMemoryForUiPreview;
-
-        public SourceBitmapImagesContainer(string sourceDirectoryPath, bool useSubDirectories, bool keepSourceFilesInMemoryForUiPreview)
+        public SourceBitmapImagesContainer(string sourceDirectoryPath, bool useSubDirectories)
         {
             baseDirectoryPath = string.Empty;
             images = new BitmapImageCollectionForXaml();
-            _keepSourceFilesInMemoryForUiPreview = keepSourceFilesInMemoryForUiPreview;
 
             if (Directory.Exists(sourceDirectoryPath))
             {
@@ -56,6 +54,10 @@ namespace Bulk_Image_Watermark
 
         private void ProcessFile(string path)
         {
+            //for testing
+            //???????????????????????????????
+            System.Threading.Thread.Sleep(500);
+
             try
             {
                 string ext = Path.GetExtension(path).ToLower();
@@ -83,14 +85,14 @@ namespace Bulk_Image_Watermark
                 string s = Path.GetDirectoryName(path);
                 string rp = s.Remove(s.IndexOf(baseDirectoryPath), baseDirectoryPath.Length);
 
+                //???????????????????????????????????
+                //add decode pixel to keep small thumbnail images in memory
+                //to increase performance
                 BitmapImage bi = null;
-                if (_keepSourceFilesInMemoryForUiPreview)
-                {
-                    bi = new BitmapImage();
-                    bi.BeginInit();
-                    bi.UriSource = new Uri(path);
-                    bi.EndInit();
-                }
+                bi = new BitmapImage();
+                bi.BeginInit();
+                bi.UriSource = new Uri(path);
+                bi.EndInit();
 
                 images.Add(new ImageFromFile(path, rp, fnwe, ft, bi));
             }
@@ -113,7 +115,7 @@ namespace Bulk_Image_Watermark
 
         public ImageFiletypes imageFileType;
 
-        public BitmapImage bitmapImage
+        public BitmapImage bitmapImageThumbnail
         { get; private set; }
 
         public ImageFromFile(string directoryFullPath, string directoryRelativeToBaseDirectoryPath, string nameWithoutPathAndExtension, ImageFiletypes type, BitmapImage image)
@@ -122,7 +124,7 @@ namespace Bulk_Image_Watermark
             imageFileDirectoryRelativeToBaseDirectoryPath = directoryRelativeToBaseDirectoryPath;
             imageFileNameWithoutPathAndExtension = nameWithoutPathAndExtension;
             imageFileType = type;
-            bitmapImage = image;
+            bitmapImageThumbnail = image;
         }
     }
 }

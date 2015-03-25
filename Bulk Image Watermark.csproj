@@ -58,7 +58,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ServiceStuff.cs" />
     <Compile Include="SourceBitmapImagesContainer.cs" />
     <Compile Include="Watermarking.cs" />
     <Compile Include="WatermarksFamily.cs" />

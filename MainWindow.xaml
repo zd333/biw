@@ -13,7 +13,6 @@
         <Style x:Uid="Style_1" TargetType="{x:Type Button}">
             <Setter x:Uid="Setter_1" Property="BorderBrush" Value="Green"/>
         </Style>
-        <loc:InverseOneWayBooleanConverter x:Key="invBool"/>
     </Window.Resources>
 
     <DockPanel x:Uid="DockPanel_1" LastChildFill="True">
@@ -27,7 +26,6 @@
                         <TextBox x:Uid="textBoxSourcePath" x:Name="textBoxSourcePath"/>
                     </DockPanel>
                     <CheckBox x:Uid="checkBoxUseSubdirectories" x:Name="checkBoxUseSubdirectories" IsChecked="True" Content="Process files in subdirectories"/>
-                    <CheckBox x:Uid="checkBoxDontLoadAllSourceImagesToMemory" x:Name="checkBoxDontLoadAllSourceImagesToMemory" IsChecked="False" Content="Do not load source images for prevew (use to speed up)" Click="checkBoxDontLoadAllSourceImagesToMemory_Click" Checked="checkBoxDontLoadAllSourceImagesToMemory_Checked"/>
                     <DockPanel x:Uid="DockPanel_3" LastChildFill="True">
                         <Label x:Uid="Label_2" Content="Destination path" DockPanel.Dock="Left"/>
                         <Button x:Uid="buttonSelectDestinationPath" x:Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectDestinationPath_Click"/>
@@ -91,10 +89,8 @@
             <TabItem x:Uid="TabItem_4" Header="Save">
                 <StackPanel x:Uid="StackPanel_2" Orientation="Vertical">
                     <StackPanel x:Uid="StackPanel_3" Orientation="Horizontal">
-                        <CheckBox x:Uid="checkBoxResizeResults" x:Name="checkBoxResizeResults"  Content="Change result files pixel dimensions"
-                                  IsEnabled="{Binding ElementName=checkBoxDontLoadAllSourceImagesToMemory, Path=IsChecked, Converter={StaticResource invBool}}"/>
-                        <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxResultResolution" HorizontalAlignment="Left" IsEditable="True"
-                                  IsEnabled="{Binding ElementName=checkBoxResizeResults, Path=IsEnabled}">
+                        <CheckBox x:Uid="checkBoxResizeResults" x:Name="checkBoxResizeResults"  Content="Change result files pixel dimensions"/>
+                        <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxResultResolution" HorizontalAlignment="Left" IsEditable="True">
                             <ComboBoxItem x:Uid="comboBoxItem320" x:Name="comboBoxItem320" Content="320*240"/>
                             <ComboBoxItem x:Uid="comboBoxItem640" x:Name="comboBoxItem640" Content="640*480"/>
                             <ComboBoxItem x:Uid="comboBoxItem1024" x:Name="comboBoxItem1024" Content="1024*768" IsSelected="True"/>
@@ -104,10 +100,9 @@
                 </StackPanel>
             </TabItem>
         </TabControl>
-        <ProgressBar x:Uid="progressBar" x:Name="progressBar" DockPanel.Dock="Bottom" Height="20"/>
         <ListBox x:Uid="listBoxPreview" x:Name="listBoxPreview" Visibility="Collapsed" ScrollViewer.CanContentScroll="False" HorizontalContentAlignment="Stretch"
 			ItemsSource="{DynamicResource previewImages}"
-			ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Width="300" SelectionChanged="listBoxPreview_SelectionChanged">
+			ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Width="200" SelectionChanged="listBoxPreview_SelectionChanged">
             <ListBox.Resources>
                 <loc:BitmapImageCollectionForXaml x:Uid="loc:BitmapImageCollectionForXaml_1" x:Key="previewImages"/>
                 <Style x:Uid="Style_2" TargetType="{x:Type MenuItem}">
@@ -121,10 +116,14 @@
             </ListBox.ContextMenu>
             <ListBox.ItemTemplate>
                 <DataTemplate x:Uid="DataTemplate_1">
-                    <Image x:Uid="Image_1" Source="{Binding bitmapImage}"/>
+                    <Image x:Uid="Image_1" Source="{Binding bitmapImageThumbnail}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <StackPanel DockPanel.Dock="Bottom" Height="30" Orientation="Horizontal">
+            <Label Name="labelMessage" Content="{StaticResource pleaseLoadImagesMessage}"/>
+            <ProgressBar x:Uid="progressBar" x:Name="progressBar" IsIndeterminate="True"/>
+        </StackPanel>
         <Image x:Uid="imagePreview" x:Name="imagePreview"/>
     </DockPanel>
 </Window>

@@ -7,4 +7,8 @@
     <system:String x:Uid="system:String_3" x:Key="warningDestinationSourcePathesTheSame">Source and destination folders are the same!</system:String>
     <system:String x:Uid="system:String_4" x:Key="warningNoResultsToSave">There is no images to precess!</system:String>
     <system:String x:Key="warningNothingToProcess">There is no actions to process with images!</system:String>
+    <system:String x:Key="loadedImagesQuantityMessage">images loaded for processing</system:String>
+    <system:String x:Key="succesfullyProcessedImagesQuantityMessage">images processed successfully</system:String>
+    <system:String x:Key="errorProcessedImagesQuantityMessage">images processed with errors</system:String>
+    <system:String x:Key="pleaseLoadImagesMessage">Please load images</system:String>
 </ResourceDictionary>

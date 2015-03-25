@@ -18,15 +18,6 @@ namespace Bulk_Image_Watermark
             return SaveImage(rtb, fileFormat, saveDirectoryPath, fileNameWithoutExtensionAndPath);
         }
 
-        public static bool WatermarkAndSaveImageFromFile(ImageFiletypes fileFormat, string path, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
-        {
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new Uri(path);
-            bi.EndInit();
-            return WatermarkScaleAndSaveImageFromBitmapImage(fileFormat, bi, bi.PixelWidth, bi.PixelHeight, watermarks, saveDirectoryPath, fileNameWithoutExtensionAndPath);            
-        }
-
         public static BitmapSource GetImageFromBitmapImageForUi(BitmapImage sourceImage, List<Watermark> watermarks)
         {
             //????????????????????????????????????????????????????????
@@ -35,14 +26,16 @@ namespace Bulk_Image_Watermark
             return rtb;
         }
 
-        //public static BitmapSource GetImageFromFileForUi(string path, List<Watermark> watermarks)
-        //{
-        //    BitmapImage bi = new BitmapImage();
-        //    bi.BeginInit();
-        //    bi.UriSource = new Uri(path);
-        //    bi.EndInit();
-        //    return GetImageFromBitmapImageForUi(bi, watermarks);
-        //}
+        public static BitmapSource GetImageFromFileForUi(string path, List<Watermark> watermarks)
+        {
+            //????????????????????????????????????????????????????????
+            //with adorners this method will become not necessary
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(path);
+            bi.EndInit();
+            return GetImageFromBitmapImageForUi(bi, watermarks);
+        }
 
         private static RenderTargetBitmap CreateWatermarkedBitmapEncoder(BitmapImage SourceImage, List<Watermark> Watermarks, int newPixelWidth, int newPixelHeight)
         {            
