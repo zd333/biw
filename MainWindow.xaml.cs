@@ -36,6 +36,9 @@ namespace Bulk_Image_Watermark
         //source property for preview
         private BitmapSource bitmapForPreview;
 
+        //cancel processing token
+        CancellationTokenSource cancelTS;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -68,7 +71,7 @@ namespace Bulk_Image_Watermark
 
             //disable controls to avoid parallel invoke or processing data update
             buttonLoadSourceImages.IsEnabled = false;
-            buttonSave.IsEnabled = false;
+            buttonSave.Visibility = System.Windows.Visibility.Collapsed;
             labelMessage.Content = (string)Application.Current.FindResource("processingImagesMessage");
 
             //prepare resize dimensions if they are necessary in next processing
@@ -145,55 +148,59 @@ namespace Bulk_Image_Watermark
             if (parameters.GetType() != typeof(ProcessAndSaveResultsParams)) return;//do not throw exception, just do nothing
 
             ProcessAndSaveResultsParams p = (ProcessAndSaveResultsParams)parameters;
-            Parallel.ForEach(images, im =>
-            {
-                string s = p.savePath + im.imageFileDirectoryRelativePath;
-
-                BitmapImage bi = new BitmapImage();
-                bi.BeginInit();
-                bi.CacheOption = BitmapCacheOption.OnLoad;
-                bi.UriSource = new Uri(im.imageFileFullPath);
-                bi.EndInit();
-
-                ImageFiletypes curType = p.iType;
-                if (!p.needConvert) curType = im.imageFileType;
-
-                int pw = bi.PixelWidth;
-                int ph = bi.PixelHeight;
-                if (p.needResize)
-                    if (bi.PixelWidth < bi.PixelHeight)
-                    {
-                        int tmp = pw;
-                        pw = ph;
-                        ph = tmp;
-                    }
-
-                if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, watermarks, s, im.imageFileNameWithoutPathAndExtension))
-                    Interlocked.Increment(ref numOk);
-                else
-                    Interlocked.Increment(ref numFail);
-
-                //update progress bar
-                this.Dispatcher.Invoke(new Action(() =>
+            ParallelOptions po = new ParallelOptions();
+            cancelTS = new CancellationTokenSource();
+            po.CancellationToken = cancelTS.Token;
+            po.MaxDegreeOfParallelism = System.Environment.ProcessorCount;
+            try
+            { 
+                Parallel.ForEach(images, po, im =>
                 {
-                    //multithread safe increment
-                    lock (progressBar)
-                    { progressBar.Value++; }
-                }));
+                    po.CancellationToken.ThrowIfCancellationRequested();
+
+                    string s = p.savePath + im.imageFileDirectoryRelativePath;
+
+                    BitmapImage bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.UriSource = new Uri(im.imageFileFullPath);
+                    bi.EndInit();
+
+                    ImageFiletypes curType = p.iType;
+                    if (!p.needConvert) curType = im.imageFileType;
+
+                    int pw = bi.PixelWidth;
+                    int ph = bi.PixelHeight;
+                    if (p.needResize)
+                        if (bi.PixelWidth < bi.PixelHeight)
+                        {
+                            int tmp = pw;
+                            pw = ph;
+                            ph = tmp;
+                        }
+                    if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, watermarks, s, im.imageFileNameWithoutPathAndExtension))
+                        Interlocked.Increment(ref numOk);
+                    else
+                        Interlocked.Increment(ref numFail);
+
+                    //update progress bar
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        //multithread safe increment
+                        lock (progressBar)
+                        { progressBar.Value++; }
+                    }));
+                }
+                );
             }
-            );  
-          
+            catch (OperationCanceledException)
+            { }
+
             //enable controls and write message
-            buttonLoadSourceImages.Dispatcher.Invoke(new Action (() => {
+            this.Dispatcher.Invoke(new Action (() => {
                 buttonLoadSourceImages.IsEnabled = true;
-            }));
-            buttonSave.Dispatcher.Invoke(new Action(() =>
-            {
-                buttonSave.IsEnabled = true;
-            }));
-            labelMessage.Dispatcher.Invoke(new Action(() =>
-            {
-                //??????????????????????????????????????????
+                buttonSave.Visibility = System.Windows.Visibility.Visible;
+
                 labelMessage.Content = numOk.ToString() + " " + (string)Application.Current.FindResource("okProcessedImagesMessage");
                 labelMessage.Content += ", " + numFail.ToString() + " " + (string)Application.Current.FindResource("failProcessedImagesMessage");
             }));
@@ -202,8 +209,6 @@ namespace Bulk_Image_Watermark
 
         private void buttonSelectSourcePath_Click(object sender, RoutedEventArgs e)
         {
-            //??????????????????????????????????????????????
-            //to add - create own wpf folder browser dialog to avoid using winforms
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.ShowNewFolderButton = false;
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -214,8 +219,6 @@ namespace Bulk_Image_Watermark
 
         private void buttonSelectDestinationPath_Click(object sender, RoutedEventArgs e)
         {
-            //??????????????????????????????????????????????
-            //to add - create own wpf folder browser dialog to avoid using winforms
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -400,6 +403,13 @@ namespace Bulk_Image_Watermark
             //remove all watermarks and rewrite image
             watermarks.Clear();
             renderPreviewImage();
+        }
+
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            //enable processing cancelation
+            if (cancelTS != null )
+                cancelTS.Cancel();
         }
     }    
 }

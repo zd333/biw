@@ -14,6 +14,7 @@
         <Style x:Uid="Style_1" TargetType="{x:Type Button}">
             <Setter x:Uid="Setter_1" Property="BorderBrush" Value="Green"/>
         </Style>
+        <loc:InverseOneWayVisibilityConverter x:Key="invVis"/>
     </Window.Resources>
 
     <DockPanel x:Uid="DockPanel_1" LastChildFill="True">
@@ -112,7 +113,11 @@
                         <ComboBoxItem x:Name="comboBoxItemBmp" Content="bmp"/>
                     </ComboBox>
 
-                    <Button x:Uid="buttonSave" x:Name="buttonSave" Grid.Column="0" Grid.Row="2" Content="Add watermarks and save files" HorizontalAlignment="Left" Click="buttonSave_Click"/>
+                    <Button x:Uid="buttonSave" x:Name="buttonSave" Grid.Column="0" Grid.Row="2"
+                            Content="Add watermarks and save files" HorizontalAlignment="Left" Click="buttonSave_Click"/>
+                    <Button x:Uid="buttonCancel" x:Name="buttonCancel" Grid.Column="0" Grid.Row="2"
+                            Content="Cancel processing" HorizontalAlignment="Left"
+                            Visibility="{Binding ElementName=buttonSave, Path=Visibility, Converter={StaticResource invVis}}" Click="buttonCancel_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
