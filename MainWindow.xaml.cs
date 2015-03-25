@@ -26,7 +26,8 @@ namespace Bulk_Image_Watermark
     public partial class MainWindow : Window
     {
         //global source images container
-        private SourceBitmapImagesContainer sourceContainer;
+        //private Imaging sourceContainer;
+        private BitmapImageCollectionForXaml images;
 
         //global watermark list
         private List<Watermark> watermarks = new List<Watermark>();
@@ -47,12 +48,12 @@ namespace Bulk_Image_Watermark
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             //check save settings
-            if (sourceContainer == null)
+            if (images == null)
             {
                 ShowMessageBoxFromResourceDictionary("warningNoResultsToSave", "warning", MessageBoxImage.Error);
                 return;
             }
-            if (sourceContainer.images.Count == 0)
+            if (images.Count == 0)
             {
                 ShowMessageBoxFromResourceDictionary("warningNoResultsToSave", "warning", MessageBoxImage.Error);
                 return;
@@ -62,11 +63,6 @@ namespace Bulk_Image_Watermark
             if (savePath.Length == 0)
             {
                 ShowMessageBoxFromResourceDictionary("warningNoDestinationPath", "warning", MessageBoxImage.Error);
-                return;
-            }
-            if (savePath.ToLower().Equals(sourceContainer.baseDirectoryPath.ToLower()))
-            {
-                ShowMessageBoxFromResourceDictionary("warningDestinationSourcePathesTheSame", "warning", MessageBoxImage.Error);
                 return;
             }
 
@@ -103,9 +99,9 @@ namespace Bulk_Image_Watermark
             //??????????????????????????????????????
             //image processing and saving
             //need parallelism here
-            foreach (ImageFromFile im in sourceContainer.images)
+            foreach (ImageFromFile im in images)
             {
-                string s = savePath + im.imageFileDirectoryRelativeToBaseDirectoryPath;
+                string s = savePath + im.imageFileDirectoryRelativePath;
 
                 //add image file format conversion here
                 //???????????????????????????????????????????
@@ -182,12 +178,12 @@ namespace Bulk_Image_Watermark
             DoubleAnimation doubleanimation = new DoubleAnimation(200.0, duration);
             progressBar.BeginAnimation(ProgressBar.ValueProperty, doubleanimation);
 
-            sourceContainer = new SourceBitmapImagesContainer(textBoxSourcePath.Text,
-                checkBoxUseSubdirectories.IsChecked.GetValueOrDefault());
+            images = new BitmapImageCollectionForXaml();
+            images = Imaging.GetImages(textBoxSourcePath.Text, checkBoxUseSubdirectories.IsChecked.GetValueOrDefault());
 
-            listBoxPreview.Resources["previewImages"] = sourceContainer.images;
+            listBoxPreview.Resources["previewImages"] = images;
 
-            labelMessage.Content = sourceContainer.images.Count.ToString() + " " + (string)Application.Current.FindResource("loadedImagesQuantityMessage");
+            labelMessage.Content = images.Count.ToString() + " " + (string)Application.Current.FindResource("loadedImagesQuantityMessage");
 
             //??????????????????????????????????????????????????
             //enable controls that can start this method
@@ -205,7 +201,7 @@ namespace Bulk_Image_Watermark
             {
                 System.Collections.IList l = listBoxPreview.SelectedItems;
                 foreach (object x in l)                    
-                    sourceContainer.images.Remove((ImageFromFile)x);
+                    images.Remove((ImageFromFile)x);
             }
             catch (Exception)
             {}
@@ -221,8 +217,8 @@ namespace Bulk_Image_Watermark
         {
             //put image on preview panel
             
-            if (sourceContainer != null)
-                if (sourceContainer.images.Count == 0)
+            if (images != null)
+                if (images.Count == 0)
                 {
                     //no images loaded
                     bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(GetResourcesPlaceholder(), watermarks);
@@ -233,7 +229,7 @@ namespace Bulk_Image_Watermark
                         bitmapForPreview = Watermarking.GetImageFromFileForUi(((ImageFromFile)listBoxPreview.SelectedItem).imageFileFullPath, watermarks);
                     else
                         //bitmapForPreview = sourceContainer.images[0].bitmapImage;
-                        bitmapForPreview = Watermarking.GetImageFromFileForUi(sourceContainer.images[0].imageFileFullPath, watermarks);
+                        bitmapForPreview = Watermarking.GetImageFromFileForUi(images[0].imageFileFullPath, watermarks);
             else
                 //no images selected
                 bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(GetResourcesPlaceholder(), watermarks);

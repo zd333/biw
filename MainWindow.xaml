@@ -21,7 +21,7 @@
                 <StackPanel x:Uid="StackPanel_1" Orientation="Vertical">
                     <DockPanel x:Uid="DockPanel_2" LastChildFill="True">
                         <Label x:Uid="Label_1" Content="Source path" DockPanel.Dock="Left"/>
-                        <Button x:Uid="buttonLoadSourceImages" x:Name="buttonLoadSourceImages" Content="Load images" DockPanel.Dock="Right" Click="buttonLoadSourceImages_Click"/>
+                        <Button x:Uid="buttonLoadSourceImages" x:Name="buttonLoadSourceImages" Content="Add images" DockPanel.Dock="Right" Click="buttonLoadSourceImages_Click"/>
                         <Button x:Uid="buttonSelectSourcePath" x:Name="buttonSelectSourcePath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectSourcePath_Click"/>
                         <TextBox x:Uid="textBoxSourcePath" x:Name="textBoxSourcePath"/>
                     </DockPanel>
