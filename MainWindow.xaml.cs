@@ -95,9 +95,29 @@ namespace Bulk_Image_Watermark
                 height = t;
             }
 
+            //prepare for convertion if necessary
+            ImageFiletypes iType = ImageFiletypes.jpg;
+            if (checkBoxChangeFormat.IsChecked.GetValueOrDefault())
+            {
+                switch (((ComboBoxItem)comboBoxFileType.SelectedItem).Content.ToString().ToLower())
+                {
+                    case "png":
+                        iType = ImageFiletypes.png;
+                        break;
+                    case "bmp":
+                        iType = ImageFiletypes.bmp;
+                        break;
+                    case "jpg":
+                    default:
+                        iType = ImageFiletypes.jpg;
+                        break;
+                }
+            }
+
             //image processing and saving
             //use additional flag to avoid access to checkbox from additional threads
             bool needResize = checkBoxResizeResults.IsChecked.GetValueOrDefault();
+            bool needConvert = checkBoxChangeFormat.IsChecked.GetValueOrDefault();
             Parallel.ForEach(images,im =>
             {
                 string s = savePath + im.imageFileDirectoryRelativePath;
@@ -110,11 +130,13 @@ namespace Bulk_Image_Watermark
                 bi.CacheOption = BitmapCacheOption.OnLoad;
                 bi.UriSource = new Uri(im.imageFileFullPath);
                 bi.EndInit();
+
+                if (!needConvert) iType = im.imageFileType;
                 
                 if (!needResize)
                 {
                     //no resizing
-                    Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, bi, bi.PixelWidth, bi.PixelHeight, watermarks, s, im.imageFileNameWithoutPathAndExtension);
+                    Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(iType, bi, bi.PixelWidth, bi.PixelHeight, watermarks, s, im.imageFileNameWithoutPathAndExtension);
                 }
                 else
                 {
@@ -122,9 +144,9 @@ namespace Bulk_Image_Watermark
                     //???????????????????????????????????????
                     //to add - scaling/cutting option for images with proportions not equal to resize proportions?
                     if (bi.PixelWidth > bi.PixelHeight)
-                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, bi, width, height, watermarks, s, im.imageFileNameWithoutPathAndExtension);
+                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(iType, bi, width, height, watermarks, s, im.imageFileNameWithoutPathAndExtension);
                     else
-                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(im.imageFileType, bi, height, width, watermarks, s, im.imageFileNameWithoutPathAndExtension);
+                        Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(iType, bi, height, width, watermarks, s, im.imageFileNameWithoutPathAndExtension);
                 }
             }
             );
