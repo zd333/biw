@@ -11,13 +11,13 @@ namespace Bulk_Image_Watermark
         //public BitmapImageCollectionForXaml images
         //{ get; set; }
 
-        public static BitmapImageCollectionForXaml GetImages(string directoryPath, bool useSubDirectories)
+        public static async Task<BitmapImageCollectionForXaml> GetImages(string directoryPath, bool useSubDirectories)
         {
             BitmapImageCollectionForXaml images = new BitmapImageCollectionForXaml();
 
             if (Directory.Exists(directoryPath))
             {
-                ProcessDirectory(ref images, directoryPath, directoryPath, useSubDirectories);
+                await Task.Run(() => ProcessDirectory(ref images, directoryPath, directoryPath, useSubDirectories));
             }
 
             return images;
@@ -43,10 +43,6 @@ namespace Bulk_Image_Watermark
 
         private static void ProcessFile(ref BitmapImageCollectionForXaml images, string filePath, string baseDirectoryPath)
         {
-            //for testing
-            //???????????????????????????????
-            System.Threading.Thread.Sleep(500);
-
             try
             {
                 string ext = Path.GetExtension(filePath).ToLower();
@@ -76,12 +72,13 @@ namespace Bulk_Image_Watermark
 
                 BitmapImage bi = new BitmapImage();
                 bi.BeginInit();
-                //???????????????????????????????????
-                //need to test memory usage with and without decodepixel
                 //decode for thumbnail
                 bi.DecodePixelWidth = 200;
+                bi.CacheOption = BitmapCacheOption.OnLoad;
                 bi.UriSource = new Uri(filePath);
-                bi.EndInit();
+                bi.EndInit();                
+                //this is for wpf control be able to bind bitmapimage, created in different thread
+                bi.Freeze();
 
                 images.Add(new ImageFromFile(filePath, rp, fnwe, ft, bi));
             }

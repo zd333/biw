@@ -166,20 +166,21 @@ namespace Bulk_Image_Watermark
             }
         }
 
-        private void LoadSourceImagesToContainer()
+        private async void LoadSourceImagesToContainer()
         {
             
             //??????????????????????????????????????????????????
             //disable controls that can start this method
             //add process to new thread, cancelation and restart mechanism instead of disabling
             buttonLoadSourceImages.IsEnabled = false;
+            buttonSave.IsEnabled = false;
 
             Duration duration = new Duration(TimeSpan.FromSeconds(20));
             DoubleAnimation doubleanimation = new DoubleAnimation(200.0, duration);
             progressBar.BeginAnimation(ProgressBar.ValueProperty, doubleanimation);
 
-            images = new BitmapImageCollectionForXaml();
-            images = Imaging.GetImages(textBoxSourcePath.Text, checkBoxUseSubdirectories.IsChecked.GetValueOrDefault());
+            images  = new BitmapImageCollectionForXaml();
+            images = await Imaging.GetImages(textBoxSourcePath.Text, checkBoxUseSubdirectories.IsChecked.GetValueOrDefault());
 
             listBoxPreview.Resources["previewImages"] = images;
 
@@ -189,6 +190,7 @@ namespace Bulk_Image_Watermark
             //enable controls that can start this method
             //add process to new thread, cancelation and restart mechanism instead of disabling
             buttonLoadSourceImages.IsEnabled = true;
+            buttonSave.IsEnabled = true;
             
             renderPreviewImage();
         }
