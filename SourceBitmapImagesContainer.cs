@@ -85,12 +85,12 @@ namespace Bulk_Image_Watermark
                 string s = Path.GetDirectoryName(path);
                 string rp = s.Remove(s.IndexOf(baseDirectoryPath), baseDirectoryPath.Length);
 
-                //???????????????????????????????????
-                //add decode pixel to keep small thumbnail images in memory
-                //to increase performance
-                BitmapImage bi = null;
-                bi = new BitmapImage();
+                BitmapImage bi = new BitmapImage();
                 bi.BeginInit();
+                //???????????????????????????????????
+                //need to test memory usage with and without decodepixel
+                //decode for thumbnail
+                bi.DecodePixelWidth = 200;
                 bi.UriSource = new Uri(path);
                 bi.EndInit();
 
