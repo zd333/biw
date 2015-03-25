@@ -11,4 +11,5 @@
     <system:String x:Key="succesfullyProcessedImagesQuantityMessage">images processed successfully</system:String>
     <system:String x:Key="errorProcessedImagesQuantityMessage">images processed with errors</system:String>
     <system:String x:Key="pleaseLoadImagesMessage">Please load images</system:String>
+    <system:String x:Key="loadingImagesMessage">Loading images</system:String>
 </ResourceDictionary>

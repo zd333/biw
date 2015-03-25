@@ -15,14 +15,14 @@ namespace Bulk_Image_Watermark
         public int yLocationInPercent
         { get; set; }
 
-        //returns actual x location in pixels according to the image size
         public int GetPixelXlocation(int recipientImageWidth)
+        //returns actual x location in pixels according to the image size
         {
             return (recipientImageWidth / 100) * xLocationInPercent;
         }
 
-        //returns actual y location in pixels according to the image size
         public int GetPixelYlocation(int recipientImageHeight)
+        //returns actual y location in pixels according to the image size
         {
             return (recipientImageHeight / 100) * yLocationInPercent;
         }
@@ -73,8 +73,8 @@ namespace Bulk_Image_Watermark
         }
 
 
-        //returns actual height in pixels according to the image size
         protected int GetPixelHeight(int recipientImageWidth, int recipientImageHeight)
+        //returns actual height in pixels according to the image size
         {
             int h = recipientImageHeight;
             if (recipientImageWidth < recipientImageHeight) h = recipientImageWidth;

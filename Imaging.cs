@@ -8,9 +8,6 @@ namespace Bulk_Image_Watermark
 {
     class Imaging
     {
-        //public BitmapImageCollectionForXaml images
-        //{ get; set; }
-
         public static async Task<BitmapImageCollectionForXaml> GetImages(string directoryPath, bool useSubDirectories)
         {
             BitmapImageCollectionForXaml images = new BitmapImageCollectionForXaml();
@@ -23,8 +20,8 @@ namespace Bulk_Image_Watermark
             return images;
         }
 
-        //separate method to use recurse
         private static void ProcessDirectory(ref BitmapImageCollectionForXaml images, string directoryPath, string baseDirectoryPath, bool useSubDirectories)
+        //separate method to use recurse
         {
             string[] fileEntries = Directory.GetFiles(directoryPath);
             foreach (string fileName in fileEntries)
@@ -43,6 +40,7 @@ namespace Bulk_Image_Watermark
 
         private static void ProcessFile(ref BitmapImageCollectionForXaml images, string filePath, string baseDirectoryPath)
         {
+            System.Threading.Thread.Sleep(5000);
             try
             {
                 string ext = Path.GetExtension(filePath).ToLower();

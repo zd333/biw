@@ -120,10 +120,8 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel DockPanel.Dock="Bottom" Height="30" Orientation="Horizontal">
-            <Label Name="labelMessage" Content="{StaticResource pleaseLoadImagesMessage}"/>
-            <ProgressBar x:Uid="progressBar" x:Name="progressBar" IsIndeterminate="True"/>
-        </StackPanel>
+        <ProgressBar x:Name="progressBar" Width="10" x:Uid="progressBar" DockPanel.Dock="Right" Orientation="Vertical"/>
+        <Label Name="labelMessage" DockPanel.Dock="Bottom" Content="{StaticResource pleaseLoadImagesMessage}" FontSize="14"/>
         <Image x:Uid="imagePreview" x:Name="imagePreview"/>
     </DockPanel>
 </Window>

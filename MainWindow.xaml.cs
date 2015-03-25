@@ -152,8 +152,8 @@ namespace Bulk_Image_Watermark
             }
         }
 
-        //custom method to show message box with strings from resources
         private void ShowMessageBoxFromResourceDictionary(string messageResourceKey, string captionResourceKey, MessageBoxImage icon)
+        //custom method to show message box with strings from resources
         {
             try
             {
@@ -169,15 +169,21 @@ namespace Bulk_Image_Watermark
         private async void LoadSourceImagesToContainer()
         {
             
-            //??????????????????????????????????????????????????
-            //disable controls that can start this method
-            //add process to new thread, cancelation and restart mechanism instead of disabling
+            //disable controls that can start this method or image processing and saving
             buttonLoadSourceImages.IsEnabled = false;
             buttonSave.IsEnabled = false;
 
-            Duration duration = new Duration(TimeSpan.FromSeconds(20));
-            DoubleAnimation doubleanimation = new DoubleAnimation(200.0, duration);
-            progressBar.BeginAnimation(ProgressBar.ValueProperty, doubleanimation);
+            labelMessage.Content = (string)Application.Current.FindResource("loadingImagesMessage");
+
+            //start progress bar animation
+            progressBar.Minimum = 0;
+            progressBar.Maximum = 100;
+            progressBar.IsIndeterminate = true;
+
+            //reset listbox and image source
+            listBoxPreview.Resources["previewImages"] = null;
+            images = null;
+            renderPreviewImage();
 
             images  = new BitmapImageCollectionForXaml();
             images = await Imaging.GetImages(textBoxSourcePath.Text, checkBoxUseSubdirectories.IsChecked.GetValueOrDefault());
@@ -186,18 +192,19 @@ namespace Bulk_Image_Watermark
 
             labelMessage.Content = images.Count.ToString() + " " + (string)Application.Current.FindResource("loadedImagesQuantityMessage");
 
-            //??????????????????????????????????????????????????
-            //enable controls that can start this method
-            //add process to new thread, cancelation and restart mechanism instead of disabling
+            //enable controls
             buttonLoadSourceImages.IsEnabled = true;
             buttonSave.IsEnabled = true;
             
             renderPreviewImage();
+
+            //reset progress bar animation
+            progressBar.IsIndeterminate = false;
         }
 
+        private void DeleteSourceImageFromResource(object sender, RoutedEventArgs e)
         //preview listbox context menu remove pressed handler
         //delete selected objects from source container, which property set as dictionary source for listbox
-        private void DeleteSourceImageFromResource(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -217,8 +224,7 @@ namespace Bulk_Image_Watermark
 
         private void renderPreviewImage()
         {
-            //put image on preview panel
-            
+            //put image on preview panel            
             if (images != null)
                 if (images.Count == 0)
                 {
@@ -248,8 +254,6 @@ namespace Bulk_Image_Watermark
             bi.EndInit();
             return bi;
         }
-
-
 
         private void buttonInsertWatermarks_Click(object sender, RoutedEventArgs e)
         {
@@ -297,8 +301,8 @@ namespace Bulk_Image_Watermark
             renderPreviewImage();
         }
 
-        //hide/show preview listbox depending to items are emty
         private void listBoxPreviewItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        //hide/show preview listbox depending to items are emty
         {
             try
             {
