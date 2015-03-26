@@ -138,7 +138,7 @@
             </ListBox.ContextMenu>
             <ListBox.ItemTemplate>
                 <DataTemplate x:Uid="DataTemplate_1">
-                    <Image x:Uid="Image_1" Source="{Binding imageFileFullPath, Converter={StaticResource uriBitm}}"/>
+                    <Image x:Uid="Image_1" Source="{Binding imageFileFullPath, IsAsync=True, Converter={StaticResource uriBitm}}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
