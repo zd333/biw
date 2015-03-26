@@ -8,26 +8,25 @@ namespace Bulk_Image_Watermark
 {
     class Imaging
     {
-        public static async Task<BitmapImageCollectionForXaml> GetImages(string directoryPath, bool useSubDirectories, int maxThumbnailsToLoad)
+        public static async Task<BitmapImageCollectionForXaml> GetImages(string directoryPath, bool useSubDirectories)
         {
             BitmapImageCollectionForXaml images = new BitmapImageCollectionForXaml();
 
             if (Directory.Exists(directoryPath))
             {
-                int numThumbnailsLoaded = 0;
-                await Task.Run(() => ProcessDirectory(ref images, directoryPath, directoryPath, useSubDirectories, ref numThumbnailsLoaded, maxThumbnailsToLoad));
+                await Task.Run(() => ProcessDirectory(ref images, directoryPath, directoryPath, useSubDirectories));
             }
 
             return images;
         }
 
-        private static void ProcessDirectory(ref BitmapImageCollectionForXaml images, string directoryPath, string baseDirectoryPath, bool useSubDirectories, ref int thumnbnailsLoaded, int maxThumbnailsToLoad)
+        private static void ProcessDirectory(ref BitmapImageCollectionForXaml images, string directoryPath, string baseDirectoryPath, bool useSubDirectories)
         //separate method to use recurse
         {
             string[] fileEntries = Directory.GetFiles(directoryPath);
             foreach (string fileName in fileEntries)
             {
-                ProcessFile(ref images, fileName, baseDirectoryPath, ref thumnbnailsLoaded, maxThumbnailsToLoad);
+                ProcessFile(ref images, fileName, baseDirectoryPath);
             }
 
             if (useSubDirectories)
@@ -35,11 +34,11 @@ namespace Bulk_Image_Watermark
                 // recurse into subdirectories 
                 string[] subdirectoryEntries = Directory.GetDirectories(directoryPath);
                 foreach (string subdirectory in subdirectoryEntries)
-                    ProcessDirectory(ref images, subdirectory, baseDirectoryPath, useSubDirectories, ref thumnbnailsLoaded, maxThumbnailsToLoad);
+                    ProcessDirectory(ref images, subdirectory, baseDirectoryPath, useSubDirectories);
             }
         }
 
-        private static void ProcessFile(ref BitmapImageCollectionForXaml images, string filePath, string baseDirectoryPath, ref int thumnbnailsLoaded, int maxThumbnailsToLoad)
+        private static void ProcessFile(ref BitmapImageCollectionForXaml images, string filePath, string baseDirectoryPath)
         {
             try
             {
@@ -66,25 +65,7 @@ namespace Bulk_Image_Watermark
                 string s = Path.GetDirectoryName(filePath);
                 string rp = s.Remove(s.IndexOf(baseDirectoryPath), baseDirectoryPath.Length);
 
-                if (thumnbnailsLoaded > maxThumbnailsToLoad)
-                    images.Add(new ImageFromFile(filePath, rp, fnwe, ft, null));
-                else
-                {
-                    thumnbnailsLoaded++;
-
-                    BitmapImage bi = new BitmapImage();
-                    bi.BeginInit();
-                    //decode for thumbnail
-                    bi.DecodePixelWidth = 200;
-                    //?????????????????????????????????
-                    bi.CacheOption = BitmapCacheOption.OnDemand;
-                    bi.UriSource = new Uri(filePath);
-                    bi.EndInit();
-                    //this is for usage in another thread
-                    bi.Freeze();
-
-                    images.Add(new ImageFromFile(filePath, rp, fnwe, ft, bi));
-                }
+                images.Add(new ImageFromFile(filePath, rp, fnwe, ft));
             }
             catch (Exception)
             {

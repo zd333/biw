@@ -28,16 +28,12 @@ namespace Bulk_Image_Watermark
 
         public ImageFiletypes imageFileType;
 
-        public BitmapImage bitmapImageThumbnail
-        { get; private set; }
-
-        public ImageFromFile(string directoryFullPath, string directoryRelativePath, string nameWithoutPathAndExtension, ImageFiletypes type, BitmapImage image)
+        public ImageFromFile(string directoryFullPath, string directoryRelativePath, string nameWithoutPathAndExtension, ImageFiletypes type)
         {
             imageFileFullPath = directoryFullPath;
             imageFileDirectoryRelativePath = directoryRelativePath;
             imageFileNameWithoutPathAndExtension = nameWithoutPathAndExtension;
             imageFileType = type;
-            bitmapImageThumbnail = image;
         }
     }
 }

@@ -15,6 +15,7 @@
             <Setter x:Uid="Setter_1" Property="BorderBrush" Value="Green"/>
         </Style>
         <loc:InverseOneWayVisibilityConverter x:Key="invVis"/>
+        <loc:UriToBitmapOneWayConverter x:Key="uriBitm"/>
     </Window.Resources>
 
     <DockPanel x:Uid="DockPanel_1" LastChildFill="True">
@@ -137,7 +138,7 @@
             </ListBox.ContextMenu>
             <ListBox.ItemTemplate>
                 <DataTemplate x:Uid="DataTemplate_1">
-                    <Image x:Uid="Image_1" Source="{Binding bitmapImageThumbnail}"/>
+                    <Image x:Uid="Image_1" Source="{Binding imageFileFullPath, Converter={StaticResource uriBitm}}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

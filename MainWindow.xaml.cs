@@ -273,7 +273,7 @@ namespace Bulk_Image_Watermark
             renderPreviewImage();
 
             images  = new BitmapImageCollectionForXaml();
-            images = await Imaging.GetImages(textBoxSourcePath.Text, checkBoxUseSubdirectories.IsChecked.GetValueOrDefault(), 0);
+            images = await Imaging.GetImages(textBoxSourcePath.Text, checkBoxUseSubdirectories.IsChecked.GetValueOrDefault());
 
             listBoxPreview.Resources["previewImages"] = images;
 
@@ -320,10 +320,8 @@ namespace Bulk_Image_Watermark
                 }
                 else
                     if (listBoxPreview.SelectedItem != null)
-                        //tbi = ((ImageFromFile)listBoxPreview.SelectedItem).bitmapImage;
                         bitmapForPreview = Watermarking.GetImageFromFileForUi(((ImageFromFile)listBoxPreview.SelectedItem).imageFileFullPath, watermarks);
                     else
-                        //bitmapForPreview = sourceContainer.images[0].bitmapImage;
                         bitmapForPreview = Watermarking.GetImageFromFileForUi(images[0].imageFileFullPath, watermarks);
             else
                 //no images selected
