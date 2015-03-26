@@ -71,6 +71,7 @@ namespace Bulk_Image_Watermark
 
             //disable controls to avoid parallel invoke or processing data update
             buttonLoadSourceImages.IsEnabled = false;
+            tabItemWatermarks.IsEnabled = false;
             buttonSave.Visibility = System.Windows.Visibility.Collapsed;
             labelMessage.Content = (string)Application.Current.FindResource("processingImagesMessage");
 
@@ -141,9 +142,8 @@ namespace Bulk_Image_Watermark
         }
         private void ProcessAndSaveResults(object parameters)
         {
-            //image processing result counters;
+            //image processing result counter
             int numOk = 0;
-            int numFail = 0;
 
             if (parameters.GetType() != typeof(ProcessAndSaveResultsParams)) return;//do not throw exception, just do nothing
 
@@ -157,52 +157,66 @@ namespace Bulk_Image_Watermark
                 Parallel.ForEach(images, po, im =>
                 {
                     po.CancellationToken.ThrowIfCancellationRequested();
-
-                    string s = p.savePath + im.imageFileDirectoryRelativePath;
-
-                    BitmapImage bi = new BitmapImage();
-                    bi.BeginInit();
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.UriSource = new Uri(im.imageFileFullPath);
-                    bi.EndInit();
-
-                    ImageFiletypes curType = p.iType;
-                    if (!p.needConvert) curType = im.imageFileType;
-
-                    int pw = bi.PixelWidth;
-                    int ph = bi.PixelHeight;
-                    if (p.needResize)
-                        if (bi.PixelWidth < bi.PixelHeight)
-                        {
-                            int tmp = pw;
-                            pw = ph;
-                            ph = tmp;
-                        }
-                    if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, watermarks, s, im.imageFileNameWithoutPathAndExtension))
-                        Interlocked.Increment(ref numOk);
-                    else
-                        Interlocked.Increment(ref numFail);
-
-                    //update progress bar
-                    this.Dispatcher.Invoke(new Action(() =>
+                    string gggg = "";
+                    try
                     {
-                        //multithread safe increment
-                        lock (progressBar)
-                        { progressBar.Value++; }
-                    }));
+                        gggg = im.imageFileFullPath;
+                        string s = p.savePath + im.imageFileDirectoryRelativePath;
+
+                        BitmapImage bi = new BitmapImage();
+                        bi.BeginInit();
+                        bi.CacheOption = BitmapCacheOption.None;
+                        bi.UriSource = new Uri(im.imageFileFullPath);
+                        bi.EndInit();
+
+                        ImageFiletypes curType = p.iType;
+                        if (!p.needConvert) curType = im.imageFileType;
+
+                        int pw = bi.PixelWidth;
+                        int ph = bi.PixelHeight;
+                        if (p.needResize)
+                        {
+                            pw = p.width;
+                            ph = p.height;
+                            if (bi.PixelWidth < bi.PixelHeight)
+                            {
+                                int tmp = pw;
+                                pw = ph;
+                                ph = tmp;
+                            }
+                        }
+                        if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, watermarks, s, im.imageFileNameWithoutPathAndExtension))
+                        {
+                            Interlocked.Increment(ref numOk);
+                        }
+                        bi = null;
+
+                        //update progress bar
+                        this.Dispatcher.Invoke(new Action(() =>
+                        {
+                            //multithread safe increment
+                            lock (progressBar)
+                            { progressBar.Value++; }
+                        }));
+                    }
+                    catch (Exception)
+                    {
+                        //bad image file?
+                    }
                 }
                 );
             }
-            catch (OperationCanceledException)
+            catch (Exception)
             { }
 
             //enable controls and write message
             this.Dispatcher.Invoke(new Action (() => {
                 buttonLoadSourceImages.IsEnabled = true;
+                tabItemWatermarks.IsEnabled = true;
                 buttonSave.Visibility = System.Windows.Visibility.Visible;
 
                 labelMessage.Content = numOk.ToString() + " " + (string)Application.Current.FindResource("okProcessedImagesMessage");
-                labelMessage.Content += ", " + numFail.ToString() + " " + (string)Application.Current.FindResource("failProcessedImagesMessage");
+                labelMessage.Content += ", " + (images.Count - numOk).ToString() + " " + (string)Application.Current.FindResource("failProcessedImagesMessage");
             }));
         }
 
@@ -259,7 +273,7 @@ namespace Bulk_Image_Watermark
             renderPreviewImage();
 
             images  = new BitmapImageCollectionForXaml();
-            images = await Imaging.GetImages(textBoxSourcePath.Text, checkBoxUseSubdirectories.IsChecked.GetValueOrDefault());
+            images = await Imaging.GetImages(textBoxSourcePath.Text, checkBoxUseSubdirectories.IsChecked.GetValueOrDefault(), 0);
 
             listBoxPreview.Resources["previewImages"] = images;
 

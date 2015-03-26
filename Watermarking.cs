@@ -33,6 +33,7 @@ namespace Bulk_Image_Watermark
             //with adorners this method will become not necessary
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.None;
             bi.UriSource = new Uri(path);
             bi.EndInit();
             return GetImageFromBitmapImageForUi(bi, watermarks);
@@ -67,11 +68,6 @@ namespace Bulk_Image_Watermark
                     if (t == typeof(TextWatermark))
                     {
                         TextWatermark tw = (TextWatermark)w;
-                        //Dispatcher.CurrentDispatcher.Invoke(new Action(() =>
-                        //{
-                        //    dc.DrawText(tw.GetFormattedText(SourceImage.PixelWidth, SourceImage.PixelHeight), new Point(tw.GetPixelXlocation(SourceImage.PixelWidth), tw.GetPixelYlocation(SourceImage.PixelHeight)));
-                        //}));
-
                         dc.DrawText(tw.GetFormattedText(SourceImage.PixelWidth, SourceImage.PixelHeight), new Point(tw.GetPixelXlocation(SourceImage.PixelWidth), tw.GetPixelYlocation(SourceImage.PixelHeight)));
 
                     }

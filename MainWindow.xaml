@@ -25,17 +25,17 @@
                         <Label x:Uid="Label_1" Content="Source path" DockPanel.Dock="Left"/>
                         <Button x:Uid="buttonLoadSourceImages" x:Name="buttonLoadSourceImages" Content="Load images" DockPanel.Dock="Right" Click="buttonLoadSourceImages_Click"/>
                         <Button x:Uid="buttonSelectSourcePath" x:Name="buttonSelectSourcePath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectSourcePath_Click"/>
-                        <TextBox x:Uid="textBoxSourcePath" x:Name="textBoxSourcePath" Text="C:\Users\Zenbook\Desktop\111"/>
+                        <TextBox x:Uid="textBoxSourcePath" x:Name="textBoxSourcePath" Text="F:\111"/>
                     </DockPanel>
                     <CheckBox x:Uid="checkBoxUseSubdirectories" x:Name="checkBoxUseSubdirectories" IsChecked="True" Content="Process files in subdirectories"/>
                     <DockPanel x:Uid="DockPanel_3" LastChildFill="True">
                         <Label x:Uid="Label_2" Content="Destination path" DockPanel.Dock="Left"/>
                         <Button x:Uid="buttonSelectDestinationPath" x:Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectDestinationPath_Click"/>
-                        <TextBox x:Uid="textBoxDestinationPath" x:Name="textBoxDestinationPath" Text="C:\Users\Zenbook\Desktop\222"/>
+                        <TextBox x:Uid="textBoxDestinationPath" x:Name="textBoxDestinationPath" Text="F:\444"/>
                     </DockPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem x:Uid="TabItem_2" Header="Edit watermarks" Height="22" VerticalAlignment="Bottom">
+            <TabItem Name="tabItemWatermarks" x:Uid="TabItem_2" Header="Edit watermarks" Height="22" VerticalAlignment="Bottom">
                 <Grid x:Uid="Grid_1" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition x:Uid="ColumnDefinition_1" Width="Auto"/>
