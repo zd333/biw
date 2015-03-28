@@ -30,22 +30,37 @@ namespace Bulk_Image_Watermark
         //private Imaging sourceContainer;
         private BitmapImageCollectionForXaml images;
 
-        //global watermark list
-        private List<Watermark> watermarks = new List<Watermark>();
-
-        //source property for preview
-        private BitmapSource bitmapForPreview;
+        //global text watermark list
+        private TextWatermarkListWithSerchByUiLabel textWatermarks = new TextWatermarkListWithSerchByUiLabel();
+        //private TextWatermark currentTextWatermark;
 
         //cancel processing token
         CancellationTokenSource cancelTS;
 
         public MainWindow()
         {
+            //add watermark first watermark to have something for binding
+            TextWatermark t = new TextWatermark((string)Application.Current.FindResource("newWatermarkText"),
+                new FontFamily("Arial"), Colors.Red, 10, 0, 70, 3, 3);
+
+            t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;
+            textWatermarks.Add(t);
+
+            
             InitializeComponent();
 
             //preview listbox items count changed handler
             //do not use XAML binding because of cant control items==null
             ((INotifyCollectionChanged)listBoxPreview.Items).CollectionChanged += listBoxPreviewItemsCollectionChanged;
+                        
+            tabItemTextWatermarks.DataContext = textWatermarks[0];
+            
+            //put placeholder on canvas to have image on it
+            renderPreviewImage();
+
+            //put added first watermark on initialized window
+            t.SetLabelGeometryAccordingToImageAndCanvas(imagePreview.Width, imagePreview.Height, canvasMain.ActualWidth, canvasMain.ActualHeight);
+            canvasMain.Children.Add(t.UiLabelOnImageInCanvas);
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
@@ -71,7 +86,7 @@ namespace Bulk_Image_Watermark
 
             //disable controls to avoid parallel invoke or processing data update
             buttonLoadSourceImages.IsEnabled = false;
-            tabItemWatermarks.IsEnabled = false;
+            tabItemTextWatermarks.IsEnabled = false;
             buttonSave.Visibility = System.Windows.Visibility.Collapsed;
             labelMessage.Content = (string)Application.Current.FindResource("processingImagesMessage");
 
@@ -157,10 +172,8 @@ namespace Bulk_Image_Watermark
                 Parallel.ForEach(images, po, im =>
                 {
                     po.CancellationToken.ThrowIfCancellationRequested();
-                    string gggg = "";
                     try
                     {
-                        gggg = im.imageFileFullPath;
                         string s = p.savePath + im.imageFileDirectoryRelativePath;
 
                         BitmapImage bi = new BitmapImage();
@@ -185,10 +198,11 @@ namespace Bulk_Image_Watermark
                                 ph = tmp;
                             }
                         }
-                        if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, watermarks, s, im.imageFileNameWithoutPathAndExtension))
-                        {
-                            Interlocked.Increment(ref numOk);
-                        }
+                        //???????????????????????????????
+                        //if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, watermarks, s, im.imageFileNameWithoutPathAndExtension))
+                        //{
+                        //    Interlocked.Increment(ref numOk);
+                        //}
                         bi = null;
 
                         //update progress bar
@@ -212,7 +226,7 @@ namespace Bulk_Image_Watermark
             //enable controls and write message
             this.Dispatcher.Invoke(new Action (() => {
                 buttonLoadSourceImages.IsEnabled = true;
-                tabItemWatermarks.IsEnabled = true;
+                tabItemTextWatermarks.IsEnabled = true;
                 buttonSave.Visibility = System.Windows.Visibility.Visible;
 
                 labelMessage.Content = numOk.ToString() + " " + (string)Application.Current.FindResource("okProcessedImagesMessage");
@@ -312,79 +326,62 @@ namespace Bulk_Image_Watermark
         private void renderPreviewImage()
         {
             //put image on preview panel            
+            BitmapImage bitmapForPreview = new BitmapImage();
+            bitmapForPreview.BeginInit();
             if (images != null)
                 if (images.Count == 0)
-                {
                     //no images loaded
-                    bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(GetResourcesPlaceholder(), watermarks);
-                }
+                    bitmapForPreview.UriSource = new Uri("pack://application:,,,/Binary resources/placeholder.jpg");
                 else
                     if (listBoxPreview.SelectedItem != null)
-                        bitmapForPreview = Watermarking.GetImageFromFileForUi(((ImageFromFile)listBoxPreview.SelectedItem).imageFileFullPath, watermarks);
+                        bitmapForPreview.UriSource = new Uri(((ImageFromFile)listBoxPreview.SelectedItem).imageFileFullPath);
                     else
-                        bitmapForPreview = Watermarking.GetImageFromFileForUi(images[0].imageFileFullPath, watermarks);
+                        bitmapForPreview.UriSource = new Uri(images[0].imageFileFullPath);
             else
                 //no images selected
-                bitmapForPreview = Watermarking.GetImageFromBitmapImageForUi(GetResourcesPlaceholder(), watermarks);
+                bitmapForPreview.UriSource = new Uri("pack://application:,,,/Binary resources/placeholder.jpg");
+            bitmapForPreview.EndInit();
 
             ImageSource isrc = bitmapForPreview;
             imagePreview.Source = isrc;
+            FitImageAndWatermarksToCanvas();
         }
-
-        private BitmapImage GetResourcesPlaceholder()
+        
+        private void FitImageAndWatermarksToCanvas()
         {
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new Uri("pack://application:,,,/Binary resources/placeholder.jpg");
-            bi.EndInit();
-            return bi;
-        }
-
-        private void buttonInsertWatermarks_Click(object sender, RoutedEventArgs e)
-        {
-            //change image and render watermarks
-
-            //get selected font family
-            Typeface f = new Typeface("Arial");
-            try
+            if (imagePreview.Source == null) return;
+            double canvasAspectRatio = canvasMain.ActualWidth / canvasMain.ActualHeight;
+            double imageAspectRatio = imagePreview.Source.Width / imagePreview.Source.Height;
+            if (canvasAspectRatio > imageAspectRatio)
             {
-                f = new Typeface(comboBoxFontFamily.SelectedItem.ToString());
+                imagePreview.Height = canvasMain.ActualHeight;
+                imagePreview.Width = imagePreview.Height * imageAspectRatio;
+                Canvas.SetLeft(imagePreview, (canvasMain.ActualWidth - imagePreview.Width) / 2);
+                Canvas.SetTop(imagePreview, 0);
             }
-            catch (Exception)
-            {}
+            else
+            {
+                imagePreview.Width = canvasMain.ActualWidth;
+                imagePreview.Height = imagePreview.Width / imageAspectRatio;
+                Canvas.SetLeft(imagePreview, 0);
+                Canvas.SetTop(imagePreview, (canvasMain.ActualHeight - imagePreview.Height) / 2);
+            }
 
-            //get selected color
-            Brush c = new SolidColorBrush(colorPickerFontColor.SelectedColor);
-            
+            foreach (TextWatermark t in textWatermarks)
+                t.SetLabelGeometryAccordingToImageAndCanvas(imagePreview.Width, imagePreview.Height, canvasMain.ActualWidth, canvasMain.ActualHeight);
 
-            //set geometrical parameters
-            int size, ang, op, x, y;
-            size = 5;
-            ang = 45;
-            op = 50;
-            int.TryParse(textBoxWatermarkSize.Text, out size);
-            int.TryParse(textBoxWatermarkAngle.Text, out ang);
-            int.TryParse(textBoxWatermarkOpacity.Text, out op);
-
-            int numx = 1;
-            int numy = 1;
-            int.TryParse(textBoxNumX.Text,out numx);
-            int.TryParse(textBoxNumY.Text,out numy);
-
-            int stepx = 100/(numx+1);
-            int stepy = 100/(numy+1);
-
-            for (int xi = 1; xi <= numx; xi++)
-                for (int yi = 1; yi <= numy; yi++)
-                {
-                    x = xi * stepx;
-                    y = yi * stepy;
-                    double dop =1.0 - op / 100.0;
-                    watermarks.Add(new TextWatermark(textBoxWatermarkText.Text, f, c , size, ang, dop, x, y));
-                }
-
-            renderPreviewImage();
         }
+
+        private void buttonAddWatermark_Click(object sender, RoutedEventArgs e)
+        {
+            TextWatermark t = new TextWatermark((string)Application.Current.FindResource("newWatermarkText"),
+                new FontFamily("Arial"), Colors.Red, 10, 0, 70, 3, 3);
+            t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;
+            t.SetLabelGeometryAccordingToImageAndCanvas(imagePreview.Width, imagePreview.Height, canvasMain.ActualWidth, canvasMain.ActualHeight);
+            canvasMain.Children.Add(t.UiLabelOnImageInCanvas);
+            textWatermarks.Add(t);
+        }
+
 
         private void listBoxPreviewItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         //hide/show preview listbox depending to items are emty
@@ -410,11 +407,17 @@ namespace Bulk_Image_Watermark
             LoadSourceImagesToContainer();
         }
 
-        private void buttonDeleteWatermarks_Click(object sender, RoutedEventArgs e)
+        private void buttonDeleteWatermark_Click(object sender, RoutedEventArgs e)
         {
-            //remove all watermarks and rewrite image
-            watermarks.Clear();
-            renderPreviewImage();
+            //now delete all added watermarks
+            //add delete selected watermark
+            //????????????????????????????????????
+            if (textWatermarks.Count > 1)
+            {
+                //always keep 1 watermark!!!
+                canvasMain.Children.Remove(textWatermarks[textWatermarks.Count - 1].UiLabelOnImageInCanvas);
+                textWatermarks.Remove(textWatermarks[textWatermarks.Count - 1]);
+            }
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
@@ -423,5 +426,21 @@ namespace Bulk_Image_Watermark
             if (cancelTS != null )
                 cancelTS.Cancel();
         }
-    }    
+
+        private void canvasMain_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //resize image and relocate watermarks
+            FitImageAndWatermarksToCanvas();
+        }
+
+        private void WatermarkLabelOnCanvasTouched(object sender, RoutedEventArgs e)
+        {
+            //canvas childrens are: image (always is first and has zero index) and added dynamicaly labels (watermarks)
+            //label index in textWatermarks list equal to canvas index -1
+            //MessageBox.Show("You've touched n°" + canvasMain.Children.IndexOf(sender as UIElement));
+            int i = textWatermarks.GetIndexByUiLabel((Label)sender);
+            if (i >= 0) tabItemTextWatermarks.DataContext = textWatermarks[i];
+        }
+
+    }
 }

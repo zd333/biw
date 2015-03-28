@@ -71,12 +71,12 @@ namespace Bulk_Image_Watermark
                         dc.DrawText(tw.GetFormattedText(SourceImage.PixelWidth, SourceImage.PixelHeight), new Point(tw.GetPixelXlocation(SourceImage.PixelWidth), tw.GetPixelYlocation(SourceImage.PixelHeight)));
 
                     }
-                    else
-                        if (t == typeof(ImageWatermark))
-                        {
-                            //?????????????????????????????????????????????
-                            //will add image watermarks here
-                        }
+                    //else
+                    //    if (t == typeof(ImageWatermark))
+                    //    {
+                    //        //?????????????????????????????????????????????
+                    //        //will add image watermarks here
+                    //    }
                     dc.Pop();//pop opacity
                     dc.Pop();//pop rotation
                 }

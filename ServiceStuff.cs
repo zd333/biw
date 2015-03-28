@@ -3,11 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
 namespace Bulk_Image_Watermark
 {
+
+    public class TextWatermarkListWithSerchByUiLabel : List<TextWatermark>
+    {
+        public int GetIndexByUiLabel(Label label)
+        {
+            for (int i=0;i<this.Count;i++)
+            {
+                if (this[i].UiLabelOnImageInCanvas == label)
+                    return i;
+            }
+            return -1;
+        }
+
+    }
     public class InverseOneWayVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
