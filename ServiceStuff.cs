@@ -3,14 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace Bulk_Image_Watermark
 {
+    public class WatermarkLabelAdorner : Adorner
+    {
+        private Ellipse corner;
+        private VisualCollection visualChildren;
 
+        public WatermarkLabelAdorner(UIElement adornedElement)
+            : base(adornedElement)
+        {
+            this.Cursor = Cursors.Hand;
+            visualChildren = new VisualCollection(this);
+
+            corner = new Ellipse();
+            corner.Cursor = Cursors.SizeNESW;
+            corner.Width = 14;
+            corner.Height = 14;
+            corner.Fill = Brushes.Silver;
+            corner.Stroke = Brushes.Navy;
+            corner.StrokeThickness = 0.5;
+
+            visualChildren.Add(corner);
+
+        }
+
+        protected override int VisualChildrenCount { get { return visualChildren.Count; } }
+        protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            double desiredWidth = AdornedElement.DesiredSize.Width;
+            double desiredHeight = AdornedElement.DesiredSize.Height;
+
+            corner.Arrange(new Rect(desiredWidth - corner.Width / 2, 0 - corner.Height / 2, corner.Width, corner.Height));
+            return finalSize;
+        }
+
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            Rect adornedElementRect = new Rect(this.AdornedElement.DesiredSize);
+            Pen renderPen = new Pen(new SolidColorBrush(Colors.Navy), 0.5);
+            drawingContext.DrawRectangle(new SolidColorBrush(Colors.Transparent), renderPen, new Rect(adornedElementRect.TopLeft, adornedElementRect.BottomRight));
+        }
+    }
     public class TextWatermarkListWithSerchByUiLabel : List<TextWatermark>
+    //helper class with method to find element index by containing Ui Label
+    //used to find index of watermark by user selected label on canvas
     {
         public int GetIndexByUiLabel(Label label)
         {

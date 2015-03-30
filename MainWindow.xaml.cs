@@ -17,6 +17,7 @@ using System.Windows.Data;
 using System.Collections.Specialized;
 using System.Windows.Media.Animation;
 using System.Threading;
+using System.Windows.Documents;
 
 
 namespace Bulk_Image_Watermark
@@ -39,28 +40,16 @@ namespace Bulk_Image_Watermark
 
         public MainWindow()
         {
-            //add watermark first watermark to have something for binding
-            TextWatermark t = new TextWatermark((string)Application.Current.FindResource("newWatermarkText"),
-                new FontFamily("Arial"), Colors.Red, 10, 0, 70, 3, 3);
-
-            t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;
-            textWatermarks.Add(t);
-
-            
             InitializeComponent();
 
             //preview listbox items count changed handler
             //do not use XAML binding because of cant control items==null
             ((INotifyCollectionChanged)listBoxPreview.Items).CollectionChanged += listBoxPreviewItemsCollectionChanged;
-                        
-            tabItemTextWatermarks.DataContext = textWatermarks[0];
-            
+                                    
             //put placeholder on canvas to have image on it
             renderPreviewImage();
-
-            //put added first watermark on initialized window
-            t.SetLabelGeometryAccordingToImageAndCanvas(imagePreview.Width, imagePreview.Height, canvasMain.ActualWidth, canvasMain.ActualHeight);
-            canvasMain.Children.Add(t.UiLabelOnImageInCanvas);
+            
+            //AddNewWatermark();            
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
@@ -374,12 +363,7 @@ namespace Bulk_Image_Watermark
 
         private void buttonAddWatermark_Click(object sender, RoutedEventArgs e)
         {
-            TextWatermark t = new TextWatermark((string)Application.Current.FindResource("newWatermarkText"),
-                new FontFamily("Arial"), Colors.Red, 10, 0, 70, 3, 3);
-            t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;
-            t.SetLabelGeometryAccordingToImageAndCanvas(imagePreview.Width, imagePreview.Height, canvasMain.ActualWidth, canvasMain.ActualHeight);
-            canvasMain.Children.Add(t.UiLabelOnImageInCanvas);
-            textWatermarks.Add(t);
+            AddNewWatermark();
         }
 
 
@@ -409,14 +393,24 @@ namespace Bulk_Image_Watermark
 
         private void buttonDeleteWatermark_Click(object sender, RoutedEventArgs e)
         {
-            //now delete all added watermarks
-            //add delete selected watermark
-            //????????????????????????????????????
-            if (textWatermarks.Count > 1)
+            if (textWatermarks.Count > 0)
             {
-                //always keep 1 watermark!!!
-                canvasMain.Children.Remove(textWatermarks[textWatermarks.Count - 1].UiLabelOnImageInCanvas);
-                textWatermarks.Remove(textWatermarks[textWatermarks.Count - 1]);
+                //remember selected watermark label
+                TextWatermark foo = (TextWatermark)tabItemTextWatermarks.DataContext;
+                
+                int i = textWatermarks.GetIndexByUiLabel(foo.UiLabelOnImageInCanvas);
+                if (i >= 0)
+                {
+                    tabItemTextWatermarks.DataContext = null;
+
+                    canvasMain.Children.Remove(foo.UiLabelOnImageInCanvas);
+                    textWatermarks.Remove(textWatermarks[i]);
+                    if (textWatermarks.Count > 0)
+                    {
+                        tabItemTextWatermarks.DataContext = textWatermarks[textWatermarks.Count - 1];
+                        AddAdornerToWatermarkLabel(textWatermarks[textWatermarks.Count - 1]);
+                    }
+                }
             }
         }
 
@@ -439,8 +433,51 @@ namespace Bulk_Image_Watermark
             //label index in textWatermarks list equal to canvas index -1
             //MessageBox.Show("You've touched n°" + canvasMain.Children.IndexOf(sender as UIElement));
             int i = textWatermarks.GetIndexByUiLabel((Label)sender);
-            if (i >= 0) tabItemTextWatermarks.DataContext = textWatermarks[i];
+            if (i >= 0)
+            {
+                RemoveAllAdornersFromLabelWatermarks();
+                tabItemTextWatermarks.DataContext = textWatermarks[i];
+                AddAdornerToWatermarkLabel(textWatermarks[i]);
+            }
         }
 
+        private void RemoveAllAdornersFromLabelWatermarks()
+        {
+            foreach (TextWatermark t in textWatermarks)
+            {
+                AdornerLayer layer = AdornerLayer.GetAdornerLayer(t.UiLabelOnImageInCanvas);
+                Adorner[] adorners = layer.GetAdorners(t.UiLabelOnImageInCanvas);
+                if (adorners != null)
+                    if (adorners.Length > 0)
+                        foreach (Adorner a in adorners)
+                            layer.Remove(a);
+            }
+        }
+
+        private void AddNewWatermark()
+        {
+            RemoveAllAdornersFromLabelWatermarks();
+
+            TextWatermark t = new TextWatermark((string)Application.Current.FindResource("newWatermarkText"),
+                new FontFamily("Arial"), Colors.Red, 10, 0, 70, 3, 3);
+            t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;
+            t.UiLabelOnImageInCanvas.Cursor = Cursors.Hand;
+            t.SetLabelGeometryAccordingToImageAndCanvas(imagePreview.Width, imagePreview.Height, canvasMain.ActualWidth, canvasMain.ActualHeight);
+            canvasMain.Children.Add(t.UiLabelOnImageInCanvas);
+
+            AddAdornerToWatermarkLabel(t);
+
+            textWatermarks.Add(t);
+            tabItemTextWatermarks.DataContext = t;
+        }
+
+        private void AddAdornerToWatermarkLabel(TextWatermark watermark)
+        {
+            if (watermark != null)
+            {
+                AdornerLayer layer = AdornerLayer.GetAdornerLayer(watermark.UiLabelOnImageInCanvas);
+                layer.Add(new WatermarkLabelAdorner(watermark.UiLabelOnImageInCanvas));                
+            }
+        }
     }
 }
