@@ -460,7 +460,9 @@ namespace Bulk_Image_Watermark
 
             TextWatermark t = new TextWatermark((string)Application.Current.FindResource("newWatermarkText"),
                 new FontFamily("Arial"), Colors.Red, 10, 0, 70, 3, 3);
-            t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;
+
+            //selection
+            t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;                          
             t.UiLabelOnImageInCanvas.Cursor = Cursors.Hand;
             t.SetLabelGeometryAccordingToImageAndCanvas(imagePreview.Width, imagePreview.Height, canvasMain.ActualWidth, canvasMain.ActualHeight);
             canvasMain.Children.Add(t.UiLabelOnImageInCanvas);
@@ -476,8 +478,35 @@ namespace Bulk_Image_Watermark
             if (watermark != null)
             {
                 AdornerLayer layer = AdornerLayer.GetAdornerLayer(watermark.UiLabelOnImageInCanvas);
-                layer.Add(new WatermarkLabelAdorner(watermark.UiLabelOnImageInCanvas));                
+                WatermarkLabelAdorner a = new WatermarkLabelAdorner(watermark.UiLabelOnImageInCanvas);
+                a.OnDrag += TextWatermarkDragHandler;
+                layer.Add(a);   
             }
+        }
+
+        private void TextWatermarkDragHandler(WatermarkLabelAdorner sender, double diffX, double diffY)
+        {
+            Label l = sender.AdornedElement as Label;
+            if (l == null) return;
+            int i = textWatermarks.GetIndexByUiLabel(l);
+            if (i < 0) return;
+            TextWatermark t = textWatermarks[i];
+            
+            int diffXinPercent = 0;
+            try
+            {
+                diffXinPercent = Convert.ToInt16(diffX / imagePreview.Width * 100);
+            }
+            catch (Exception) { }
+            t.xLocationInPercent += diffXinPercent;
+
+            int diffYinPercent = 0;
+            try
+            {
+                diffYinPercent = Convert.ToInt16(diffY / imagePreview.Height * 100);
+            }
+            catch (Exception) { }
+            t.yLocationInPercent += diffYinPercent;
         }
     }
 }

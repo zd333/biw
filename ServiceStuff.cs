@@ -15,7 +15,15 @@ using System.Windows.Shapes;
 namespace Bulk_Image_Watermark
 {
     public class WatermarkLabelAdorner : Adorner
+        //adorner for label of text watermark
     {
+        private Point draggingStartPosition;
+        private Point draggingEndPosition;
+
+        //drug event
+        public delegate void DragEventContainer(WatermarkLabelAdorner sender, double diffX, double diffY);
+        public event DragEventContainer OnDrag;
+
         private Ellipse corner;
         private VisualCollection visualChildren;
 
@@ -24,7 +32,7 @@ namespace Bulk_Image_Watermark
         {
             this.Cursor = Cursors.Hand;
             visualChildren = new VisualCollection(this);
-
+            //rotation ellipse on right top ange
             corner = new Ellipse();
             corner.Cursor = Cursors.SizeNESW;
             corner.Width = 14;
@@ -32,9 +40,27 @@ namespace Bulk_Image_Watermark
             corner.Fill = Brushes.Silver;
             corner.Stroke = Brushes.Navy;
             corner.StrokeThickness = 0.5;
-
             visualChildren.Add(corner);
 
+            //handlers for drugging
+            this.MouseLeftButtonDown += AdornerMouseLeftButtonDown;
+            this.MouseLeftButtonUp += AdornerMouseLeftButtonUp;
+        }
+
+        private void AdornerMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //remember mouse position before drugging
+        {
+            var draggableControl = sender as WatermarkLabelAdorner;
+            draggingStartPosition = e.GetPosition(this);
+            draggableControl.CaptureMouse();
+        }
+
+        private void AdornerMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            draggingEndPosition = e.GetPosition(this);
+            var draggable = sender as WatermarkLabelAdorner;
+            draggable.ReleaseMouseCapture();
+            OnDrag(this, draggingEndPosition.X - draggingStartPosition.X, draggingEndPosition.Y - draggingStartPosition.Y);
         }
 
         protected override int VisualChildrenCount { get { return visualChildren.Count; } }
@@ -44,13 +70,14 @@ namespace Bulk_Image_Watermark
         {
             double desiredWidth = AdornedElement.DesiredSize.Width;
             double desiredHeight = AdornedElement.DesiredSize.Height;
-
+            //place rotation ellipse
             corner.Arrange(new Rect(desiredWidth - corner.Width / 2, 0 - corner.Height / 2, corner.Width, corner.Height));
             return finalSize;
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
+            //draw border rectangle
             Rect adornedElementRect = new Rect(this.AdornedElement.DesiredSize);
             Pen renderPen = new Pen(new SolidColorBrush(Colors.Navy), 0.5);
             drawingContext.DrawRectangle(new SolidColorBrush(Colors.Transparent), renderPen, new Rect(adornedElementRect.TopLeft, adornedElementRect.BottomRight));
