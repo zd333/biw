@@ -16,7 +16,6 @@ namespace Bulk_Image_Watermark
             {
                 await Task.Run(() => ProcessDirectory(ref images, directoryPath, directoryPath, useSubDirectories));
             }
-
             return images;
         }
 
@@ -28,7 +27,6 @@ namespace Bulk_Image_Watermark
             {
                 ProcessFile(ref images, fileName, baseDirectoryPath);
             }
-
             if (useSubDirectories)
             {
                 // recurse into subdirectories 

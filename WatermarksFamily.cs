@@ -222,7 +222,7 @@ namespace Bulk_Image_Watermark
             text = Text;
             fontFamily = Font;
             foreground = Foreground;
-            //this is for usage in another thread
+            //this is for usage in another thread???????????????????????
             //Foreground.Freeze();
 
             UiLabelOnImageInCanvas.Content = Text;

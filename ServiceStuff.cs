@@ -27,7 +27,6 @@ namespace Bulk_Image_Watermark
             }
             return -1;
         }
-
     }
     public class InverseOneWayVisibilityConverter : IValueConverter
     {
@@ -38,7 +37,6 @@ namespace Bulk_Image_Watermark
                 return System.Windows.Visibility.Collapsed;
             else
                 return System.Windows.Visibility.Visible;
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
@@ -69,7 +67,6 @@ namespace Bulk_Image_Watermark
             {
                 return null;
             }
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
@@ -78,5 +75,4 @@ namespace Bulk_Image_Watermark
             return null;
         }
     }
-
 }

@@ -13,33 +13,13 @@ namespace Bulk_Image_Watermark
     { jpg, png, bmp}
     static class Watermarking
     {
-        public static bool WatermarkScaleAndSaveImageFromBitmapImage(ImageFiletypes fileFormat, BitmapImage sourceImage, int newPixelWidth, int newPixelHight, List<Watermark> watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
+        public static bool WatermarkScaleAndSaveImageFromBitmapImage(ImageFiletypes fileFormat, BitmapImage sourceImage, int newPixelWidth, int newPixelHight, TextWatermarkListWithSerchByUiLabel watermarks, string saveDirectoryPath, string fileNameWithoutExtensionAndPath)
         {
             RenderTargetBitmap rtb = CreateWatermarkedBitmapEncoder(sourceImage, watermarks, newPixelWidth, newPixelHight);            
             return SaveImage(rtb, fileFormat, saveDirectoryPath, fileNameWithoutExtensionAndPath);
         }
 
-        public static BitmapSource GetImageFromBitmapImageForUi(BitmapImage sourceImage, List<Watermark> watermarks)
-        {
-            //????????????????????????????????????????????????????????
-            //with adorners this method will become not necessary
-            RenderTargetBitmap rtb = CreateWatermarkedBitmapEncoder(sourceImage, watermarks, sourceImage.PixelWidth,sourceImage.PixelHeight);
-            return rtb;
-        }
-
-        public static BitmapSource GetImageFromFileForUi(string path, List<Watermark> watermarks)
-        {
-            //????????????????????????????????????????????????????????
-            //with adorners this method will become not necessary
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.CacheOption = BitmapCacheOption.None;
-            bi.UriSource = new Uri(path);
-            bi.EndInit();
-            return GetImageFromBitmapImageForUi(bi, watermarks);
-        }
-
-        private static RenderTargetBitmap CreateWatermarkedBitmapEncoder(BitmapImage SourceImage, List<Watermark> Watermarks, int newPixelWidth, int newPixelHeight)
+        private static RenderTargetBitmap CreateWatermarkedBitmapEncoder(BitmapImage SourceImage, TextWatermarkListWithSerchByUiLabel Watermarks, int newPixelWidth, int newPixelHeight)
         {            
             DrawingVisual visual = new DrawingVisual();
             
@@ -58,25 +38,25 @@ namespace Bulk_Image_Watermark
                     //rotate drawing context
                     RotateTransform rt = new RotateTransform();
                     rt.Angle = w.angle;
-                    rt.CenterX = SourceImage.PixelWidth / 2;
-                    rt.CenterY = SourceImage.PixelHeight / 2;
+                    rt.CenterX = 0;
+                    rt.CenterY = 0;
                     dc.PushTransform(rt);
 
-                    dc.PushOpacity(w.opacity);
+                    //dc.PushOpacity(w.opacity);
+                    double op = 1 - w.opacity / 100.0;
+                    dc.PushOpacity(op);
 
-                    Type t = w.GetType();
-                    if (t == typeof(TextWatermark))
-                    {
-                        TextWatermark tw = (TextWatermark)w;
-                        dc.DrawText(tw.GetFormattedText(SourceImage.PixelWidth, SourceImage.PixelHeight), new Point(tw.GetPixelXlocation(SourceImage.PixelWidth), tw.GetPixelYlocation(SourceImage.PixelHeight)));
+                    TextWatermark tw = (TextWatermark)w;
 
-                    }
-                    //else
-                    //    if (t == typeof(ImageWatermark))
-                    //    {
-                    //        //?????????????????????????????????????????????
-                    //        //will add image watermarks here
-                    //    }
+                    int x, y;
+                    double sin, cos;
+                    sin = Math.Sin(w.angle * Math.PI / 180.0);
+                    cos = Math.Cos(w.angle * Math.PI / 180.0);
+                    x = Convert.ToInt16(tw.GetPixelXlocation(SourceImage.PixelWidth) * cos + tw.GetPixelYlocation(SourceImage.PixelHeight) * sin);
+                    y = Convert.ToInt16( - tw.GetPixelXlocation(SourceImage.PixelWidth) * sin + tw.GetPixelYlocation(SourceImage.PixelHeight) * cos);
+
+                    dc.DrawText(tw.GetFormattedText(SourceImage.PixelWidth, SourceImage.PixelHeight), new Point(x, y));
+
                     dc.Pop();//pop opacity
                     dc.Pop();//pop rotation
                 }

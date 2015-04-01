@@ -43,7 +43,7 @@ namespace Bulk_Image_Watermark
             corner.MouseEnter += AdornerEllipseMouseEnter;
             corner.MouseLeave += AdornerEllipseMouseLeave;
 
-            corner.Cursor = Cursors.SizeNESW;
+            //corner.Cursor = Cursors.SizeNESW;
             corner.Width = 14;
             corner.Height = 14;
             corner.Fill = Brushes.Silver;
@@ -58,7 +58,8 @@ namespace Bulk_Image_Watermark
         {
             //disable adorner body mouse pressed handlers to avoid movement instead of rotation
             this.MouseLeftButtonDown -= AdornerMouseLeftButtonDown;
-            this.MouseLeftButtonUp -= AdornerMouseLeftButtonUp;            
+            this.MouseLeftButtonUp -= AdornerMouseLeftButtonUp;     
+            //set custom cursor
         }
 
         private void AdornerEllipseMouseLeave(object sender, System.EventArgs e)
@@ -100,6 +101,7 @@ namespace Bulk_Image_Watermark
         }
 
         protected override int VisualChildrenCount { get { return visualChildren.Count; } }
+  
         protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -119,6 +121,4 @@ namespace Bulk_Image_Watermark
             drawingContext.DrawRectangle(new SolidColorBrush(Colors.Transparent), renderPen, new Rect(adornedElementRect.TopLeft, adornedElementRect.BottomRight));
         }
     }
-
-
 }

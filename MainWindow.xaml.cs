@@ -189,9 +189,11 @@ namespace Bulk_Image_Watermark
                         }
                         //???????????????????????????????
                         //if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, watermarks, s, im.imageFileNameWithoutPathAndExtension))
-                        //{
-                        //    Interlocked.Increment(ref numOk);
-                        //}
+
+                        if (Watermarking.WatermarkScaleAndSaveImageFromBitmapImage(curType, bi, pw, ph, textWatermarks, s, im.imageFileNameWithoutPathAndExtension))
+                        {
+                            Interlocked.Increment(ref numOk);
+                        }
                         bi = null;
 
                         //update progress bar
@@ -431,7 +433,6 @@ namespace Bulk_Image_Watermark
         {
             //canvas childrens are: image (always is first and has zero index) and added dynamicaly labels (watermarks)
             //label index in textWatermarks list equal to canvas index -1
-            //MessageBox.Show("You've touched n°" + canvasMain.Children.IndexOf(sender as UIElement));
             int i = textWatermarks.GetIndexByUiLabel((Label)sender);
             if (i >= 0)
             {
@@ -502,15 +503,6 @@ namespace Bulk_Image_Watermark
             else
                 if (operation == DragOperations.Rotate)
                 {
-                    //?????????????????????? check if this formula correct?
-                    //double w = sender.ActualWidth;
-                    //double d = Math.Sqrt(diffX * diffX + diffY * diffY)/2;
-                    //double da = 2 * Math.Asin(d / w) * (180.0 / Math.PI);
-                    //if (((t.angle > 270) && (t.angle < 360)) || ())
-                    //    da = -da;
-
-                    //t.angle += Convert.ToInt16(da);
-
                     double ox = sender.ActualWidth * Math.Cos((t.angle) * Math.PI / 180);
                     double oy = sender.ActualWidth * Math.Sin((t.angle) * Math.PI / 180);                    
                     double nx = ox + diffX;
@@ -525,9 +517,6 @@ namespace Bulk_Image_Watermark
                         double na = Math.Atan(ny / nx) * (180.0 / Math.PI);
                         t.angle = Convert.ToInt16(na);
                     }
-                    //int xRightCornerInPercent = t.xLocationInPercent + Convert.ToInt16(((sender.ActualWidth / imagePreview.Width) * 100) * Math.Cos(t.angle * Math.PI / 180));
-                    //int yRightCornerInPercent = t.yLocationInPercent + Convert.ToInt16(((sender.ActualHeight / imagePreview.Height) * 100) * Math.Sin(t.angle * Math.PI / 180));
-
                 }
 
         }
