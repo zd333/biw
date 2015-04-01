@@ -128,7 +128,10 @@ namespace Bulk_Image_Watermark
             get { return _angle; }
             set
             {
-                _angle = value;
+                if (value < -90) _angle = -90;
+                else
+                    if (value > 90) _angle = 90;
+                    else _angle = value;
                 RotateTransform rt = new RotateTransform(Convert.ToDouble(_angle));
                 UiLabelOnImageInCanvas.RenderTransform = rt;
                 RaisePropertyChanged("angle");

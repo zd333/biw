@@ -484,29 +484,52 @@ namespace Bulk_Image_Watermark
             }
         }
 
-        private void TextWatermarkDragHandler(WatermarkLabelAdorner sender, double diffX, double diffY)
+        private void TextWatermarkDragHandler(WatermarkLabelAdorner sender, DragOperations operation, double diffX, double diffY)
         {
             Label l = sender.AdornedElement as Label;
             if (l == null) return;
             int i = textWatermarks.GetIndexByUiLabel(l);
             if (i < 0) return;
             TextWatermark t = textWatermarks[i];
-            
-            int diffXinPercent = 0;
-            try
-            {
-                diffXinPercent = Convert.ToInt16(diffX / imagePreview.Width * 100);
-            }
-            catch (Exception) { }
-            t.xLocationInPercent += diffXinPercent;
 
-            int diffYinPercent = 0;
-            try
+            if (operation == DragOperations.Move)
             {
-                diffYinPercent = Convert.ToInt16(diffY / imagePreview.Height * 100);
+                int diffXinPercent = Convert.ToInt16((diffX / imagePreview.Width) * 100);
+                int diffYinPercent = Convert.ToInt16((diffY / imagePreview.Height) * 100);
+                t.xLocationInPercent += diffXinPercent;
+                t.yLocationInPercent += diffYinPercent;
             }
-            catch (Exception) { }
-            t.yLocationInPercent += diffYinPercent;
+            else
+                if (operation == DragOperations.Rotate)
+                {
+                    //?????????????????????? check if this formula correct?
+                    //double w = sender.ActualWidth;
+                    //double d = Math.Sqrt(diffX * diffX + diffY * diffY)/2;
+                    //double da = 2 * Math.Asin(d / w) * (180.0 / Math.PI);
+                    //if (((t.angle > 270) && (t.angle < 360)) || ())
+                    //    da = -da;
+
+                    //t.angle += Convert.ToInt16(da);
+
+                    double ox = sender.ActualWidth * Math.Cos((t.angle) * Math.PI / 180);
+                    double oy = sender.ActualWidth * Math.Sin((t.angle) * Math.PI / 180);                    
+                    double nx = ox + diffX;
+                    if (nx < 0)
+                        if (diffY < 0)
+                            t.angle = -90;
+                        else
+                            t.angle = 90;
+                    else
+                    {
+                        double ny = oy + diffY;
+                        double na = Math.Atan(ny / nx) * (180.0 / Math.PI);
+                        t.angle = Convert.ToInt16(na);
+                    }
+                    //int xRightCornerInPercent = t.xLocationInPercent + Convert.ToInt16(((sender.ActualWidth / imagePreview.Width) * 100) * Math.Cos(t.angle * Math.PI / 180));
+                    //int yRightCornerInPercent = t.yLocationInPercent + Convert.ToInt16(((sender.ActualHeight / imagePreview.Height) * 100) * Math.Sin(t.angle * Math.PI / 180));
+
+                }
+
         }
     }
 }

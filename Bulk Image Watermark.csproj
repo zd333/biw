@@ -62,6 +62,7 @@
     <Compile Include="Imaging.cs" />
     <Compile Include="ServiceStuff.cs" />
     <Compile Include="Watermarking.cs" />
+    <Compile Include="WatermarkLabelAdorner.cs" />
     <Compile Include="WatermarksFamily.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
