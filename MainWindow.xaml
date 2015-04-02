@@ -8,11 +8,8 @@
         
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Uid="Window_1" x:Class="Bulk_Image_Watermark.MainWindow"
         
-        Title="Bulk image watermark" Height="600" Width="800" MinHeight="480" MinWidth="640">
+        Title="Bulk image watermark" Height="600" Width="800" MinHeight="480" MinWidth="640" Icon="Binary resources/RK.png">
     <Window.Resources>
-        <Style x:Uid="Style_1" TargetType="{x:Type Button}">
-            <Setter x:Uid="Setter_1" Property="BorderBrush" Value="Green"/>
-        </Style>
         <loc:InverseOneWayVisibilityConverter x:Key="invVis"/>
         <loc:UriToBitmapOneWayConverter x:Key="uriBitm"/>
     </Window.Resources>
@@ -50,6 +47,7 @@
                         <ColumnDefinition x:Uid="ColumnDefinition_7" Width="Auto"/>
                         <ColumnDefinition x:Uid="ColumnDefinition_8" Width="Auto"/>
                         <ColumnDefinition x:Uid="ColumnDefinition_9" Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition x:Uid="RowDefinition_1"/>
@@ -97,6 +95,9 @@
                     <Label x:Uid="Label_8" Content="Opacity" Grid.Column="8" Grid.Row="0"/>
                     <TextBox x:Uid="textBoxWatermarkOpacity" x:Name="textBoxWatermarkOpacity" Grid.Column="8" Grid.Row="1" HorizontalContentAlignment="Center"
                              Text="{Binding Path=opacity, UpdateSourceTrigger=PropertyChanged}"/>
+                    
+                    <Button Name="buttonSaveTemplate" Content="Save template" Grid.Column="9" Grid.Row="0" Click="buttonSaveTemplate_Click"/>
+                    <Button Name="buttonLoadTemplate" Content="Load template" Grid.Column="9" Grid.Row="1" Click="buttonLoadTemplate_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Uid="TabItem_4" Header="Save">

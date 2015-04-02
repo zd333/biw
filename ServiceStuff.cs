@@ -28,6 +28,34 @@ namespace Bulk_Image_Watermark
             return -1;
         }
     }
+
+    [Serializable]
+    public class TextWatermarkSerializationHelper
+    {
+        public string text;
+        public string fontFamilyName;
+        public int colorArgb;
+        public int height;
+        public int angle;
+        public int opacity;
+        public int x;
+        public int y;
+        public TextWatermarkSerializationHelper()
+        {
+        }
+        public TextWatermarkSerializationHelper(string Text, string FontFamilyName, int ColorArgb, int Height, int Angle, int Opacity, int X, int Y)
+        {
+            text = Text;
+            fontFamilyName = FontFamilyName;
+            colorArgb = ColorArgb;
+            height = Height;
+            angle = Angle;
+            opacity = Opacity;
+            x = X;
+            y = Y;
+        }
+    }
+
     public class InverseOneWayVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,

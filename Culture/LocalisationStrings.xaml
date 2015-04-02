@@ -16,4 +16,5 @@
     <system:String x:Key="okProcessedImagesMessage">images processed successfully</system:String>
     <system:String x:Key="failProcessedImagesMessage">images processed with errors</system:String>
     <system:String x:Key="newWatermarkText">New watermark</system:String>
+    <system:String x:Key="nothingToSaveInTemplate">No watermarks to save in template!</system:String>
 </ResourceDictionary>

@@ -18,6 +18,9 @@ using System.Collections.Specialized;
 using System.Windows.Media.Animation;
 using System.Threading;
 using System.Windows.Documents;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
 
 
 namespace Bulk_Image_Watermark
@@ -460,7 +463,7 @@ namespace Bulk_Image_Watermark
             RemoveAllAdornersFromLabelWatermarks();
 
             TextWatermark t = new TextWatermark((string)Application.Current.FindResource("newWatermarkText"),
-                new FontFamily("Arial"), Colors.Red, 10, 0, 70, 3, 3);
+                new System.Windows.Media.FontFamily("Arial"), Colors.Red, 10, 0, 70, 3, 3);
 
             //selection
             t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;                          
@@ -519,6 +522,104 @@ namespace Bulk_Image_Watermark
                     }
                 }
 
+        }
+
+        private void buttonSaveTemplate_Click(object sender, RoutedEventArgs e)
+        {
+            if (textWatermarks.Count == 0)
+            {
+                ShowMessageBoxFromResourceDictionary("nothingToSaveInTemplate", "warning", MessageBoxImage.Error);
+                return;
+            }
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "MyWatermarks";
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "Watermark templates (.xml)|*.xml";
+
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                string path = dlg.FileName;
+                //use helper class with stored properties to serialize text watermarks
+                //serialization of original class is problematic because of cokplex properties (such as UI control, etc.)
+                TextWatermarkSerializationHelper[] th = new TextWatermarkSerializationHelper[textWatermarks.Count];
+
+                for (int i = 0; i < th.Length; i++)
+                {
+                    System.Drawing.Color c = System.Drawing.Color.FromArgb(textWatermarks[i].foreground.A,
+                        textWatermarks[i].foreground.R, textWatermarks[i].foreground.G, textWatermarks[i].foreground.B);
+                    
+                    th[i] = new TextWatermarkSerializationHelper(
+                        textWatermarks[i].text,
+                        textWatermarks[i].fontFamily.ToString(),
+                        c.ToArgb(),
+                        textWatermarks[i].heightInPercent,
+                        textWatermarks[i].angle,
+                        textWatermarks[i].opacity,
+                        textWatermarks[i].xLocationInPercent,
+                        textWatermarks[i].yLocationInPercent);
+                }
+
+                XmlSerializer writer = new XmlSerializer(typeof(TextWatermarkSerializationHelper[]));                
+                try
+                {
+                    System.IO.FileStream file = System.IO.File.Create(path);
+                    writer.Serialize(file, th);
+                    file.Close();
+                }
+                catch (Exception)
+                { }
+            } 
+        }
+
+        private void buttonLoadTemplate_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.FileName = "MyWatermarks";
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "Watermark templates (.xml)|*.xml";
+
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                string path = dlg.FileName;
+                XmlSerializer reader = new XmlSerializer(typeof(TextWatermarkSerializationHelper[]));
+                TextWatermarkSerializationHelper[] th = null;
+                try
+                {
+                    System.IO.StreamReader file = new System.IO.StreamReader(path);
+                    th = (TextWatermarkSerializationHelper[])reader.Deserialize(file);
+                }
+                catch (Exception)
+                { }
+                if (th != null)
+                {
+                    RemoveAllAdornersFromLabelWatermarks();
+                    textWatermarks = new TextWatermarkListWithSerchByUiLabel();
+                    foreach (TextWatermarkSerializationHelper h in th)
+                    {
+                        System.Drawing.Color c = System.Drawing.Color.FromArgb(h.colorArgb);
+                        TextWatermark t = new TextWatermark(h.text,
+                            new System.Windows.Media.FontFamily(h.fontFamilyName),
+                            System.Windows.Media.Color.FromArgb(c.A, c.R, c.G, c.B),
+                            h.height,
+                            h.angle,
+                            h.opacity,
+                            h.x,
+                            h.y);
+
+                        t.UiLabelOnImageInCanvas.MouseLeftButtonDown += WatermarkLabelOnCanvasTouched;
+                        t.UiLabelOnImageInCanvas.Cursor = Cursors.Hand;
+                        t.SetLabelGeometryAccordingToImageAndCanvas(imagePreview.Width, imagePreview.Height, canvasMain.ActualWidth, canvasMain.ActualHeight);
+                        canvasMain.Children.Add(t.UiLabelOnImageInCanvas);
+                        
+                        textWatermarks.Add(t);
+                    }
+
+                    AddAdornerToWatermarkLabel(textWatermarks[textWatermarks.Count - 1]);
+                    tabItemTextWatermarks.DataContext = textWatermarks[textWatermarks.Count - 1];
+                }
+            }
         }
     }
 }

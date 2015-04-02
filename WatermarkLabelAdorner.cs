@@ -43,7 +43,7 @@ namespace Bulk_Image_Watermark
             corner.MouseEnter += AdornerEllipseMouseEnter;
             corner.MouseLeave += AdornerEllipseMouseLeave;
 
-            //corner.Cursor = Cursors.SizeNESW;
+            corner.Cursor = Cursors.SizeNESW;
             corner.Width = 14;
             corner.Height = 14;
             corner.Fill = Brushes.Silver;
