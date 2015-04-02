@@ -6,15 +6,15 @@
     <system:String x:Uid="system:String_2" x:Key="warningNoDestinationPath">Destination folder not selected!</system:String>
     <system:String x:Uid="system:String_3" x:Key="warningDestinationSourcePathesTheSame">Source and destination folders are the same!</system:String>
     <system:String x:Uid="system:String_4" x:Key="warningNoResultsToSave">There is no images to precess!</system:String>
-    <system:String x:Key="warningNothingToProcess">There is no actions to process with images!</system:String>
-    <system:String x:Key="loadedImagesQuantityMessage">images loaded for processing</system:String>
-    <system:String x:Key="succesfullyProcessedImagesQuantityMessage">images processed successfully</system:String>
-    <system:String x:Key="errorProcessedImagesQuantityMessage">images processed with errors</system:String>
-    <system:String x:Key="pleaseLoadImagesMessage">Please load images</system:String>
-    <system:String x:Key="loadingImagesMessage">Loading images</system:String>
-    <system:String x:Key="processingImagesMessage">Processing and saving images</system:String>
-    <system:String x:Key="okProcessedImagesMessage">images processed successfully</system:String>
-    <system:String x:Key="failProcessedImagesMessage">images processed with errors</system:String>
-    <system:String x:Key="newWatermarkText">New watermark</system:String>
-    <system:String x:Key="nothingToSaveInTemplate">No watermarks to save in template!</system:String>
+    <system:String x:Uid="system:String_5" x:Key="warningNothingToProcess">There is no actions to process with images!</system:String>
+    <system:String x:Uid="system:String_6" x:Key="loadedImagesQuantityMessage">images loaded for processing</system:String>
+    <system:String x:Uid="system:String_7" x:Key="succesfullyProcessedImagesQuantityMessage">images processed successfully</system:String>
+    <system:String x:Uid="system:String_8" x:Key="errorProcessedImagesQuantityMessage">images processed with errors</system:String>
+    <system:String x:Uid="system:String_9" x:Key="pleaseLoadImagesMessage">Please load images</system:String>
+    <system:String x:Uid="system:String_10" x:Key="loadingImagesMessage">Loading images</system:String>
+    <system:String x:Uid="system:String_11" x:Key="processingImagesMessage">Processing and saving images</system:String>
+    <system:String x:Uid="system:String_12" x:Key="okProcessedImagesMessage">images processed successfully</system:String>
+    <system:String x:Uid="system:String_13" x:Key="failProcessedImagesMessage">images processed with errors</system:String>
+    <system:String x:Uid="system:String_14" x:Key="newWatermarkText">New watermark</system:String>
+    <system:String x:Uid="system:String_15" x:Key="nothingToSaveInTemplate">No watermarks to save in template!</system:String>
 </ResourceDictionary>

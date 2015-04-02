@@ -10,8 +10,8 @@
         
         Title="Bulk image watermark" Height="600" Width="800" MinHeight="480" MinWidth="640" Icon="Binary resources/RK.png">
     <Window.Resources>
-        <loc:InverseOneWayVisibilityConverter x:Key="invVis"/>
-        <loc:UriToBitmapOneWayConverter x:Key="uriBitm"/>
+        <loc:InverseOneWayVisibilityConverter x:Uid="loc:InverseOneWayVisibilityConverter_1" x:Key="invVis"/>
+        <loc:UriToBitmapOneWayConverter x:Uid="loc:UriToBitmapOneWayConverter_1" x:Key="uriBitm"/>
     </Window.Resources>
 
     <DockPanel x:Uid="DockPanel_1" LastChildFill="True">
@@ -22,19 +22,19 @@
                         <Label x:Uid="Label_1" Content="Source path" DockPanel.Dock="Left"/>
                         <Button x:Uid="buttonLoadSourceImages" x:Name="buttonLoadSourceImages" Content="Load images" DockPanel.Dock="Right" Click="buttonLoadSourceImages_Click"/>
                         <Button x:Uid="buttonSelectSourcePath" x:Name="buttonSelectSourcePath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectSourcePath_Click"/>
-                        <TextBox x:Uid="textBoxSourcePath" x:Name="textBoxSourcePath" Text="C:\Users\Zenbook\Desktop\111"/>
+                        <TextBox x:Uid="textBoxSourcePath" x:Name="textBoxSourcePath" Text=""/>
                     </DockPanel>
                     <CheckBox x:Uid="checkBoxUseSubdirectories" x:Name="checkBoxUseSubdirectories" IsChecked="True" Content="Process files in subdirectories"/>
                     <DockPanel x:Uid="DockPanel_3" LastChildFill="True">
                         <Label x:Uid="Label_2" Content="Destination path" DockPanel.Dock="Left"/>
                         <Button x:Uid="buttonSelectDestinationPath" x:Name="buttonSelectDestinationPath" Content="..." DockPanel.Dock="Right" Width="40" Click="buttonSelectDestinationPath_Click"/>
-                        <TextBox x:Uid="textBoxDestinationPath" x:Name="textBoxDestinationPath" Text="C:\Users\Zenbook\Desktop\222"/>
+                        <TextBox x:Uid="textBoxDestinationPath" x:Name="textBoxDestinationPath" Text=""/>
                     </DockPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Name="tabItemTextWatermarks" x:Uid="TabItem_2" Header="Text watermarks" Height="22" VerticalAlignment="Bottom">
                 <TabItem.DataContext>
-                    <loc:TextWatermark/>
+                    <loc:TextWatermark x:Uid="loc:TextWatermark_1"/>
                 </TabItem.DataContext>
                 <Grid x:Uid="Grid_1" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
@@ -47,7 +47,7 @@
                         <ColumnDefinition x:Uid="ColumnDefinition_7" Width="Auto"/>
                         <ColumnDefinition x:Uid="ColumnDefinition_8" Width="Auto"/>
                         <ColumnDefinition x:Uid="ColumnDefinition_9" Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_10" Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition x:Uid="RowDefinition_1"/>
@@ -60,18 +60,18 @@
                     <TextBox x:Uid="textBoxWatermarkText" x:Name="textBoxWatermarkText" Width="150" Grid.Column="1" Grid.Row="1"
                              Text="{Binding Path=text, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <Label Content="Font" Grid.Column="2" Grid.Row="0"/>
-                    <ComboBox Name="comboBoxFontFamily" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" Grid.Column="2" Grid.Row="1"
+                    <Label x:Uid="Label_9" Content="Font" Grid.Column="2" Grid.Row="0"/>
+                    <ComboBox x:Uid="comboBoxFontFamily" Name="comboBoxFontFamily" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" Grid.Column="2" Grid.Row="1"
                               SelectedItem="{Binding Path=fontFamily}">
                         <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Path=Source}" FontFamily="{Binding}"/>
+                            <DataTemplate x:Uid="DataTemplate_2">
+                                <TextBlock x:Uid="TextBlock_1" Text="{Binding Path=Source}" FontFamily="{Binding}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <Label Content="Color" Grid.Column="3" Grid.Row="0"/>
-                    <xctk:ColorPicker Name="colorPickerFontColor" Grid.Column="3" Grid.Row="1" Width="40"
+                    <Label x:Uid="Label_10" Content="Color" Grid.Column="3" Grid.Row="0"/>
+                    <xctk:ColorPicker x:Uid="colorPickerFontColor" Name="colorPickerFontColor" Grid.Column="3" Grid.Row="1" Width="40"
                                       SelectedColor="{Binding Path=foreground}">
                     </xctk:ColorPicker>
 
@@ -96,20 +96,20 @@
                     <TextBox x:Uid="textBoxWatermarkOpacity" x:Name="textBoxWatermarkOpacity" Grid.Column="8" Grid.Row="1" HorizontalContentAlignment="Center"
                              Text="{Binding Path=opacity, UpdateSourceTrigger=PropertyChanged}"/>
                     
-                    <Button Name="buttonSaveTemplate" Content="Save template" Grid.Column="9" Grid.Row="0" Click="buttonSaveTemplate_Click"/>
-                    <Button Name="buttonLoadTemplate" Content="Load template" Grid.Column="9" Grid.Row="1" Click="buttonLoadTemplate_Click"/>
+                    <Button x:Uid="buttonSaveTemplate" Name="buttonSaveTemplate" Content="Save template" Grid.Column="9" Grid.Row="0" Click="buttonSaveTemplate_Click"/>
+                    <Button x:Uid="buttonLoadTemplate" Name="buttonLoadTemplate" Content="Load template" Grid.Column="9" Grid.Row="1" Click="buttonLoadTemplate_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Uid="TabItem_4" Header="Save">
-                <Grid>
+                <Grid x:Uid="Grid_2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_11" Width="Auto"/>
+                        <ColumnDefinition x:Uid="ColumnDefinition_12" Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition x:Uid="RowDefinition_3"/>
+                        <RowDefinition x:Uid="RowDefinition_4"/>
+                        <RowDefinition x:Uid="RowDefinition_5"/>
                     </Grid.RowDefinitions>
                     <CheckBox x:Uid="checkBoxResizeResults" x:Name="checkBoxResizeResults" Grid.Column="0" Grid.Row="0" Content="Change result files pixel dimensions"/>
                     <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxResultResolution" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" IsEditable="True">
@@ -118,11 +118,11 @@
                         <ComboBoxItem x:Uid="comboBoxItem1024" x:Name="comboBoxItem1024" Content="1024*768" IsSelected="True"/>
                     </ComboBox>
 
-                    <CheckBox x:Name="checkBoxChangeFormat" Grid.Column="0" Grid.Row="1" Content="Change result files format"/>
-                    <ComboBox x:Uid="comboBoxResultResolution" x:Name="comboBoxFileType" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left">
-                        <ComboBoxItem x:Name="comboBoxItemJpg" Content="jpg" IsSelected="True"/>
-                        <ComboBoxItem x:Name="comboBoxItemPng" Content="png"/>
-                        <ComboBoxItem x:Name="comboBoxItemBmp" Content="bmp"/>
+                    <CheckBox x:Uid="checkBoxChangeFormat" x:Name="checkBoxChangeFormat" Grid.Column="0" Grid.Row="1" Content="Change result files format"/>
+                    <ComboBox x:Uid="comboBoxFileType" x:Name="comboBoxFileType" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left">
+                        <ComboBoxItem x:Uid="comboBoxItemJpg" x:Name="comboBoxItemJpg" Content="jpg" IsSelected="True"/>
+                        <ComboBoxItem x:Uid="comboBoxItemPng" x:Name="comboBoxItemPng" Content="png"/>
+                        <ComboBoxItem x:Uid="comboBoxItemBmp" x:Name="comboBoxItemBmp" Content="bmp"/>
                     </ComboBox>
 
                     <Button x:Uid="buttonSave" x:Name="buttonSave" Grid.Column="0" Grid.Row="2"
@@ -132,12 +132,12 @@
                             Visibility="{Binding ElementName=buttonSave, Path=Visibility, Converter={StaticResource invVis}}" Click="buttonCancel_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="About">
-                <StackPanel Orientation="Vertical">
-                    <Label Content="Small free tool for image watermarking with parallelism support based on .NET"/>
-                    <Label Content="changli.alexander@gmail.com"/>
-                    <Label>
-                        <Hyperlink NavigateUri="https://bitbucket.org/zd333/bulk-image-watermark" RequestNavigate="Hyperlink_RequestNavigate">
+            <TabItem x:Uid="TabItem_5" Header="About">
+                <StackPanel x:Uid="StackPanel_2" Orientation="Vertical">
+                    <Label x:Uid="Label_11" Content="Small free tool for image watermarking with parallelism support based on .NET"/>
+                    <Label x:Uid="Label_12" Content="changli.alexander@gmail.com"/>
+                    <Label x:Uid="Label_13">
+                        <Hyperlink x:Uid="Hyperlink_1" NavigateUri="https://bitbucket.org/zd333/bulk-image-watermark" RequestNavigate="Hyperlink_RequestNavigate">
                             https://bitbucket.org/zd333/bulk-image-watermark
                         </Hyperlink>
                     </Label>
@@ -165,8 +165,8 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <ProgressBar x:Name="progressBar" Width="10" x:Uid="progressBar" DockPanel.Dock="Right" Orientation="Vertical"/>
-        <Label Name="labelMessage" DockPanel.Dock="Bottom" Content="{StaticResource pleaseLoadImagesMessage}" FontSize="14"/>
-        <Canvas Name="canvasMain" ClipToBounds="True" Background="AliceBlue" SizeChanged="canvasMain_SizeChanged">
+        <Label x:Uid="labelMessage" Name="labelMessage" DockPanel.Dock="Bottom" Content="{StaticResource pleaseLoadImagesMessage}" FontSize="14"/>
+        <Canvas x:Uid="canvasMain" Name="canvasMain" ClipToBounds="True" Background="AliceBlue" SizeChanged="canvasMain_SizeChanged">
             <Image x:Uid="imagePreview" x:Name="imagePreview"/>
         </Canvas>
     </DockPanel>
