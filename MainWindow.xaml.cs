@@ -21,6 +21,7 @@ using System.Windows.Documents;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
+using System.Diagnostics;
 
 
 namespace Bulk_Image_Watermark
@@ -620,6 +621,12 @@ namespace Bulk_Image_Watermark
                     tabItemTextWatermarks.DataContext = textWatermarks[textWatermarks.Count - 1];
                 }
             }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

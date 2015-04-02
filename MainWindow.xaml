@@ -132,6 +132,17 @@
                             Visibility="{Binding ElementName=buttonSave, Path=Visibility, Converter={StaticResource invVis}}" Click="buttonCancel_Click"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="About">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Small free tool for image watermarking with parallelism support based on .NET"/>
+                    <Label Content="changli.alexander@gmail.com"/>
+                    <Label>
+                        <Hyperlink NavigateUri="https://bitbucket.org/zd333/bulk-image-watermark" RequestNavigate="Hyperlink_RequestNavigate">
+                            https://bitbucket.org/zd333/bulk-image-watermark
+                        </Hyperlink>
+                    </Label>
+                </StackPanel>
+            </TabItem>
         </TabControl>
         <ListBox x:Uid="listBoxPreview" x:Name="listBoxPreview" Visibility="Collapsed" ScrollViewer.CanContentScroll="False" HorizontalContentAlignment="Stretch"
 			ItemsSource="{DynamicResource previewImages}"
